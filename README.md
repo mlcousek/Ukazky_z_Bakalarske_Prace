@@ -20,10 +20,11 @@ Tento projekt je součástí mé bakalářské práce na téma **"Aplikace pro v
 ![Registrace](./Screenshots/registrace.png)
 
 ### 2. Tréninkový plán
-![Tréninkový plán](./screenshots/treninkovy_plan.png)
+![Tréninkový plán](./Screenshots/plan.png)
 
 ### 3. Statistiky
-![Statistiky](./screenshots/statistiky.png)
+![Statistiky](./Screenshots/Přehled.png)
+![Statistiky](./Screenshots/maximalky.png)
 
 ---
 
