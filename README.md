@@ -34,7 +34,7 @@ Aplikaci si můžete vyzkoušet na následující adrese: [Aplikace](http://tpwe
 - username: 11214711
 - heslo: 60-dayfreetrial
 
-V aplikace je vytvořen testovací uživatel s emailem: test@test.cz a s heslem: Test123
+V aplikace je vytvořen testovací uživatel s emailem: test@test.cz a s heslem: **Test123**
 V případě vytváření vlastního účtu pokračujte dle návodu v textu bakalářské práce. 
 
 ---
