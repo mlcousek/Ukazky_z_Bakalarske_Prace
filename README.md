@@ -23,7 +23,7 @@ Tento projekt je součástí mé bakalářské práce na téma **"Aplikace pro v
 ![Tréninkový plán](./Screenshots/plan.png)
 
 ### 3. Statistiky
-![Statistiky](./Screenshots/Přehled.png)
+![Statistiky](./Screenshots/prehled.png)
 ![Statistiky](./Screenshots/maximalky.png)
 
 ---
