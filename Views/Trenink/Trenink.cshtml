@@ -1,0 +1,760 @@
+﻿<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+
+<div id="vsechno">
+
+    <h1>Trénink @ViewBag.typTreninku</h1>
+
+    <div class="texty">
+        <div class="BSHVMNohy BSHVMRamBic BSHVMZada BSHVMHrTric" style="display: none;">
+            <h2>Budování svalové hmoty - Velká/malá partie</h2>
+        </div>
+        <div class="BSHPPLPush BSHPPLPull BSHPPLLegs" style="display: none;">
+            <h2>Budování svalové hmoty - PPL</h2>
+        </div>
+        <div class="RVPPLPush RVPPLPull RVPPLLegs" style="display: none;">
+            <h2>Redukce váhy - PPL</h2>
+        </div>
+        <div class="SRPPLPush SRPPLPull SRPPLLegs" style="display: none;">
+            <h2>Silový rozvoj - PPL</h2>
+        </div>
+        <div class="RVVMNohy RVVMRamBic RVVMZada RVVMHrTric" style="display: none;">
+            <h2>Redukce váhy - Velká/malá partie</h2>
+        </div>
+        <div class="SRVMNohy SRVMRamBic SRVMZada SRVMHrTric" style="display: none;">
+            <h2>Silový rozvoj - Velká/malá partie</h2>
+        </div>
+        <div class="BSHKR1 BSHKR2 BSHKR3" style="display: none;">
+            <h2>Budování svalové hmoty - Kruhový trénink</h2>
+            <p>Každý kruhový ténink je na něco zaměřený, podle toho cvičit komplexni cviky. (Pokud je kruhový trénink zaměřený na nohy, tak se při dřepu snažit o co největší váhy. Pokud na hrudník tak u benchpressu a pokud na záda, tak u mrtvého tahu. Pokud má jet dřep a trénink je zaměřen na hrudník, tak na dřep volit menší váhy.)<br>(A jak poznat na co je trénink zaměřený? Podle toho na jakou partii je nejvíc cviků.)</p>
+        </div>
+        <div class="RVKR1 RVKR2 RVKR3" style="display: none;">
+            <h2>Redukce váhy - Kruhový trénink</h2>
+            <p>Každý kruhový ténink je na něco zaměřený, podle toho cvičit komplexni cviky. (Pokud je kruhový trénink zaměřený na nohy, tak se při dřepu snažit o co největší váhy. Pokud na hrudník tak u benchpressu a pokud na záda, tak u mrtvého tahu. Pokud má jet dřep a trénink je zaměřen na hrudník, tak na dřep volit menší váhy.)<br>(A jak poznat na co je trénink zaměřený? Podle toho na jakou partii je nejvíc cviků.)</p>
+        </div>
+        <div class="SRKR1 SRKR2 SRKR3" style="display: none;">
+            <h2>Silový rozvoj - Kruhový trénink</h2>
+            <p>Každý kruhový ténink je na něco zaměřený, podle toho cvičit komplexni cviky. (Pokud je kruhový trénink zaměřený na nohy, tak se při dřepu snažit o co největší váhy. Pokud na hrudník tak u benchpressu a pokud na záda, tak u mrtvého tahu. Pokud má jet dřep a trénink je zaměřen na hrudník, tak na dřep volit menší váhy.)<br>(A jak poznat na co je trénink zaměřený? Podle toho na jakou partii je nejvíc cviků.)</p>
+        </div>
+    </div>
+
+    <p>Nejprve se pořádně rozhýbat, zahřát a prokrvit každou svalovou skupinu na těle. (3-5 minut dohromady)<br>Chceme prohřát svalové partie, abychom snížili riziko poranění, zlepšili výkon a zlepšili propojení svalů s naší myslí.</p>
+    <div class="button-container-cus">
+
+        <p>(Hodnoty odpočinku brát orientačně.)</p>
+        <form action="/Cvik/VolbaVah" method="get">
+            <button class="btn btn-outline-dark btn-sm" type="submit">Informace o volbě vah</button>
+        </form>
+    </div>
+
+    <div id="kontejner-cviku"></div>
+
+    <div class="BSHKR11 BSHKR21 BSHKR31 RVKR11 RVKR21 RVKR31 SRKR11 SRKR21 SRKR31" style="display: none;">
+        <p>Po dokončení tréninku, cvičit alespoň 5-10 minut core (např plank nebo různé cviky na core)</p>
+    </div>
+    <p class="mb-3">Po odcvičení doporučuji alespoň lehce protáhnout cvičené svalové skupiny.</p>
+    <p class="text-center" id="nejdevidet" style="display: none;">Náhled byl vygenerován pomocí aplikace pro tvorbu tréninkových plánů. &copy; @DateTime.Now.Year - Jiří Mlčoušek</p>
+</div>
+
+<button type="button" class="btn btn-dark float-right-custom mb-3" id="pridatCvikButton">Přidat cvik</button>
+<button type="button" class="btn btn-secondary mb-3 custom-mr" id="zpetNaPlanButton">Zpět na plán</button>
+<button type="button" class="btn btn-outline-dark mb-3" id="generovatButton">Generovat náhled tréninku</button>
+
+<!-- Modální okno 1 -->
+<div class="modal fade" id="myModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Název cviku</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalContent">Obsah cviku</p>
+                <div id="serieFormular" class="form-group">
+                    <label for="series">Počet odcvičených sérií:</label>
+                     <input type="number" class="form-control" id="series" min="0" max="50">
+                    <button type="button" class="btn btn-success my-2" onclick="changeSeriesCount()">Potvrdit série</button>
+                </div>
+                <div id="seriesFields"></div>
+                <div id="uzivatelVahaFormular" class="form-group">
+                    <label style="margin-top: 10px;" for="uzivatelVaha">Váha při cvičení cviku:</label>
+                    <input type="number" class="form-control" id="uzivatelVaha" min="20" max="300" value="0">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary mb-3" id="feedbackButton" onclick="submitFeedback()">Odeslat zpětnou vazbu</button>
+                    <button type="button" class="btn btn-secondary mb-3" data-bs-dismiss="modal">Zavřít</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modální okno 2 -->
+ <div class="modal fade" id="myModal2" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel1">Na jaké místo se má cvik přesunout?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="poradiFormular" class="form-group">
+                    <label for="poradiKam"></label>
+                    <input type="number" class="form-control" id="poradiKam" min="1" max="@ViewBag.cviky.Count" value="1">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info mb-3" id="feedbackButton2" onclick="zmenitPoradiCviku()">Potvrdit</button>
+                    <button type="button" class="btn btn-secondary mb-3" data-bs-dismiss="modal">Zavřít</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+
+
+
+<script>
+    function pohybMysi(event) {
+        var nejdevidet = document.getElementById('nejdevidet');
+        nejdevidet.style.display = 'none';
+        var elements = document.getElementsByClassName('skrytTrida');
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.display = 'table-cell';
+        }
+    }
+    document.addEventListener('mousemove', pohybMysi);
+
+    var generovatButton = document.getElementById("generovatButton");
+
+    //ziskani data z url
+    var currentUrl = window.location.href;
+    var queryParams = new URLSearchParams(window.location.search);
+    var dateParam = queryParams.get('date');
+    var dateFromUrl = new Date(dateParam);
+    var dateString = dateFromUrl.toISOString();
+    var dateStringShort = dateString.substring(0, 10);
+
+    generovatButton.addEventListener("click", function () {
+
+        var element = document.getElementById('vsechno');
+        var nejdevidet = document.getElementById('nejdevidet');
+        nejdevidet.style.display = 'block';
+
+        var elements = document.getElementsByClassName('skrytTrida');
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].style.display = 'none'; 
+        }
+
+        var opt = {
+            margin: 0.965,
+            filename: '@ViewBag.typTreninkuZkratka' + ' ' + dateStringShort + '.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+        };
+
+        html2pdf().set(opt).from(element).save();
+    });
+
+
+    
+    var element = document.querySelector('.@ViewBag.typTreninkuZkratka');
+    var element1 = document.querySelector('.@ViewBag.typTreninkuZkratka' + 1);
+    if (element) {
+
+        element.style.display = 'block';
+    }
+    if (element1) {
+
+        element1.style.display = 'block';
+    }
+    // Získání dnešního data
+    var dnes = new Date();
+    var dd = String(dnes.getDate()).padStart(2, '0');
+    var mm = String(dnes.getMonth() + 1).padStart(2, '0'); 
+    var yyyy = dnes.getFullYear();
+    var dnesDatum = yyyy + '-' + mm + '-' + dd;
+
+    var cvikId;
+
+
+
+    if (dnes.getFullYear() === dateFromUrl.getFullYear()) {
+        if (dnes.getMonth() === dateFromUrl.getMonth()) {
+            if (dnes.getDate() === dateFromUrl.getDate()) {
+
+                document.getElementById('uzivatelVahaFormular').style.display = 'none';
+            }
+        }
+
+    }
+
+
+
+    var pridatCvikButton = document.getElementById("pridatCvikButton");
+
+    pridatCvikButton.addEventListener("click", function () {
+            window.location.href = "/Cvik/PridatDoPlanu?date=" + dateParam;
+        });
+
+    var zpetNaPlanButton = document.getElementById("zpetNaPlanButton");
+
+    zpetNaPlanButton.addEventListener("click", function () {
+        window.location.href = "/TP"; 
+    });
+
+    var cviky = @Html.Raw(Json.Serialize(ViewBag.cviky));
+    var datacviku = @Html.Raw(Json.Serialize(ViewBag.datacviku));
+    var typTreninkuZkratka = @Html.Raw(Json.Serialize(ViewBag.typTreninkuZkratka));
+    var aktualniUzivatel = @Html.Raw(Json.Serialize(ViewBag.uzivatel));
+
+    var filteredData = datacviku.filter(function (entry) {
+        var cvikDate = new Date(entry.datum); 
+
+        return cvikDate.getFullYear() === dateFromUrl.getFullYear() &&
+            cvikDate.getMonth() === dateFromUrl.getMonth() &&
+            cvikDate.getDate() === dateFromUrl.getDate();
+    });
+
+    var uzivatelVaha = document.getElementById("uzivatelVaha");
+    if (filteredData[0] !== undefined) {
+        uzivatelVaha.value = filteredData[0].vahaUzivatele;
+    } else {
+        uzivatelVaha.value = aktualniUzivatel[0].váha;
+    }
+
+    function naplnitCvicebniSablonu() {
+        var kontejnerCviku = document.getElementById("kontejner-cviku");
+        var table = document.createElement("table");
+        table.classList.add("table", "table-hover");
+
+        // Vytvoření hlavičky tabulky
+        var thead = document.createElement("thead");
+        var headerRow = document.createElement("tr");
+        var headers = ["Pořadí", "Název cviku", "Série", "Opakování", "Odpočinek mezi sériemi"];
+        headers.forEach(function (headerText) {
+            var header = document.createElement("th");
+            header.textContent = headerText;
+            header.scope = "col";
+            headerRow.appendChild(header);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Vytvoření těla tabulky
+        var tbody = document.createElement("tbody");
+        var cvikInCvikyn = -1;
+        var cislovani = 0;
+        cviky.forEach(function (cvik) {
+            cislovani = cislovani + 1;
+            cvikInCvikyn = cvikInCvikyn + 1;
+            var index = cvik.typyTreninku.indexOf(typTreninkuZkratka);
+
+            var row = document.createElement("tr");
+            row.id = cvik.cvikId;
+            row.classList.add("table-light");
+
+            var cvikVDatabazi = datacviku.find(function (item) {
+                var datumVPlanu = dateString.slice(0, 10);
+                var datumZDatabaze = item.datum.slice(0, 10);
+                return item.cvikId === cvik.cvikId && datumVPlanu === datumZDatabaze; 
+            });
+
+            if (cvikVDatabazi) {
+                row.classList.remove('table-light');
+                row.classList.add("table-success");
+                document.getElementById("feedbackButton").textContent = "Upravit zpětnou vazbu";
+                document.getElementById("feedbackButton").classList.remove("btn-primary");
+                document.getElementById("feedbackButton").classList.add("btn-warning");
+            }
+
+            var idCell = document.createElement("td");
+            idCell.textContent = cislovani;
+            row.appendChild(idCell);
+
+            var nameCell = document.createElement("td");
+            nameCell.textContent = cvik.nazev;
+            nameCell.classList.add("clickable"); 
+            nameCell.addEventListener("click", function () {
+                     cvikId = cvik.cvikId;
+                    var cvikVDatabazi2 = datacviku.find(function (item) {
+                        var datumVPlanu = dateString.slice(0, 10);
+                        var datumZDatabaze = item.datum.slice(0, 10);
+                        return item.cvikId === cvik.cvikId && datumVPlanu === datumZDatabaze;
+                    });
+                if (cvikVDatabazi2) {
+                    document.getElementById("feedbackButton").textContent = "Upravit zpětnou vazbu";
+                    document.getElementById("feedbackButton").classList.remove("btn-primary");
+                    document.getElementById("feedbackButton").classList.add("btn-warning");
+                } else {
+                        document.getElementById("feedbackButton").textContent = "Poslat zpětnou vazbu";
+                        document.getElementById("feedbackButton").classList.remove("btn-warning");
+                        document.getElementById("feedbackButton").classList.add("btn-primary");
+                }
+
+            });
+            nameCell.addEventListener("mouseenter", function () { 
+                this.style.cursor = "pointer"; 
+                this.style.color = "blue"; 
+            });
+            nameCell.addEventListener("mouseleave", function () { 
+                this.style.color = ""; 
+
+            });
+            nameCell.addEventListener("click", function () { 
+                document.getElementById("exampleModalLabel").textContent = cvik.nazev;
+                var modalContent = document.getElementById("modalContent");
+                modalContent.innerHTML = ""; 
+
+                var série = document.createElement("p");
+                série.textContent = "Série: " + cvik.počtySérií[index];
+                modalContent.appendChild(série);
+
+                var početOpakování = document.createElement("p");
+                početOpakování.textContent = "Počet opakování: " + cvik.počtyOpakování[index];
+                modalContent.appendChild(početOpakování);
+
+
+                var odpočinek = document.createElement("p");
+                odpočinek.textContent = "Odpočinek: " + cvik.pauzyMeziSériemi[index] + " sekund";
+                modalContent.appendChild(odpočinek);
+
+                var popis = document.createElement("p");
+                popis.textContent = "Popis cviku: " + cvik.popisCviku;
+                modalContent.appendChild(popis);
+
+                document.getElementById("series").value = cvik.počtySérií[index];
+                changeSeriesCount1(cvik);
+
+                var myModal = new bootstrap.Modal(document.getElementById('myModal1'), {
+                    keyboard: false
+                });
+                myModal.show(); 
+            });
+            row.appendChild(nameCell);
+
+            var cvikVDatabaziZaznamy = datacviku.filter(function (item) {
+                var datumVPlanu = dateString.slice(0, 10);
+                var datumZDatabaze = item.datum.slice(0, 10);
+                return item.cvikId === cvik.cvikId && datumVPlanu === datumZDatabaze;
+            });
+
+
+            var setsCell = document.createElement("td");
+            var restCell = document.createElement("td");
+            var repetitionsCell = document.createElement("td");
+
+            if (cvikVDatabazi) {
+                var maxCisloSerie = -Infinity; 
+                var pocetOpakovaniString = [];
+
+                cvikVDatabaziZaznamy.forEach(function (zaznam) {
+                    if (zaznam.cisloSerie > maxCisloSerie) {
+                        maxCisloSerie = zaznam.cisloSerie;
+                    }
+
+                    var index = zaznam.cisloSerie - 1;
+                   
+                    pocetOpakovaniString[index] = zaznam.pocetOpakovani;
+                    //console.log(pocetOpakovaniString);
+
+                    // if (index >= pocetOpakovaniString.length) {
+                    //     for (var i = pocetOpakovaniString.length; i < index; i++) {
+                    //     }
+                    //     pocetOpakovaniString.push(zaznam.pocetOpakovani); 
+                    // } else {
+                    //     pocetOpakovaniString.splice(index, 0, zaznam.pocetOpakovani); 
+                    // }
+                });
+                var spojenyPocetOpakovaniString = pocetOpakovaniString.join(", ");
+                setsCell.textContent = maxCisloSerie;
+                repetitionsCell.textContent = spojenyPocetOpakovaniString;
+
+            } else {
+
+                setsCell.textContent = cvik.počtySérií[index];
+                repetitionsCell.textContent = cvik.počtyOpakování[index];
+            }
+            row.appendChild(setsCell);
+
+            row.appendChild(repetitionsCell);
+
+            restCell.textContent = cvik.pauzyMeziSériemi[index] + " sekund";
+            row.appendChild(restCell);
+
+            var deleteAUpravitCell = document.createElement("td");
+            deleteAUpravitCell.classList.add("skrytTrida");
+            var deleteButton = document.createElement("button");
+            deleteButton.textContent = "Smazat cvik";
+            deleteButton.classList.add("btn", "btn-outline-danger", "btn-sm", "custom-mr");
+            deleteButton.addEventListener("click", function () {
+                    var rowId = this.parentNode.parentNode.id;
+                    var seriesDatac = [];
+                    seriesDatac.push({
+                        Datum: dateString,
+                        cvikId: rowId,
+                        CisloSerie: -1,
+                        PocetOpakovani: -1,
+                        CvicenaVaha: -1,
+                        Vaha: -1
+                    });
+                    $.ajax({
+                        url: '/TreninkoveData/DeleteFromDatabase',
+                        type: 'POST',
+                        data: seriesDatac[0],
+
+                        success: function (response) {
+                            $.ajax({
+                                url: '/Cvik/SmazatDataCvikuZDatabazeIDenTreninku',
+                                type: 'POST',
+                                data: seriesDatac[0],
+
+                                success: function (response) {
+                                    if (response.wasDeleted) {
+                                        
+                                        window.location.href = "/TP";
+                                    } else {
+                                        
+                                        location.reload();
+                                    }
+
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log("chyba pri mazani dat cviku");
+                                }
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("chyba v mazani treninkovych dat z databaze");
+                        }
+                    });
+                
+            });
+            deleteAUpravitCell.appendChild(deleteButton);
+            var upravitButton = document.createElement("button");
+            upravitButton.textContent = "Upravit cvik";
+            upravitButton.classList.add("btn", "btn-outline-warning", "btn-sm", "custom-mr");
+            upravitButton.id = cvik.cvikId
+            upravitButton.addEventListener("click", function () {
+                var rowId = this.parentNode.parentNode.id;
+                window.location.href = "/Cvik/UpravitCvik?id=" + rowId + "&date=" + dateParam;
+            });
+            deleteAUpravitCell.appendChild(upravitButton);
+            if (cvikVDatabazi) 
+            { 
+                
+                upravitButton.style.opacity = '0';
+                upravitButton.style.pointerEvents = 'none';
+            }
+
+            var posunoutButton = document.createElement("button");
+            posunoutButton.textContent = "Posunout cvik";
+            posunoutButton.classList.add("btn", "btn-outline-info", "btn-sm");
+            posunoutButton.id = cvik.cvikId;
+            posunoutButton.addEventListener("click", function () {
+                openModal('myModal2', this.parentNode.parentNode.id);
+            });
+            deleteAUpravitCell.appendChild(posunoutButton);
+
+            row.appendChild(deleteAUpravitCell);
+
+            tbody.appendChild(row);
+        });
+        table.appendChild(tbody);
+
+        kontejnerCviku.appendChild(table);
+    }
+
+    naplnitCvicebniSablonu();
+
+var seriesCount = 1; 
+
+function changeSeriesCount() {
+    var newSeriesCount = document.getElementById("series").value;
+    seriesCount = parseInt(newSeriesCount);
+    if (seriesCount < 0) {
+        alert("Zadejte prosím platný počet sérií (0 až 50).");
+        seriesCount = 0;
+    } else if (seriesCount > 50) {
+        alert("Zadejte prosím platný počet sérií (0 až 50).");
+        seriesCount = 0;
+    }
+    renderSeriesFields();
+}
+function changeSeriesCount1(cvik) {
+    var newSeriesCount = document.getElementById("series").value;
+    seriesCount = parseInt(newSeriesCount);
+    if (seriesCount < 0) {
+        alert("Zadejte prosím platný počet sérií (0 až 50).");
+        seriesCount = 0;
+    } else if (seriesCount > 50) {
+        alert("Zadejte prosím platný počet sérií (0 až 50).");
+        seriesCount = 0;
+    }
+    renderSeriesFields1(cvik);
+}
+
+function renderSeriesFields() {
+    var seriesFieldsContainer = document.getElementById("seriesFields");
+    seriesFieldsContainer.innerHTML = ""; 
+
+    for (var i = 0; i < seriesCount; i++) {
+        var seriesNumber = i + 1;
+        var seriesField = document.createElement("div");
+        seriesField.classList.add("form-group");
+
+        var repetitionsLabel = document.createElement("label");
+        repetitionsLabel.setAttribute("for", "repetitions_" + seriesNumber);
+        repetitionsLabel.textContent = "Počet opakování v sérii " + seriesNumber + ":";
+        repetitionsLabel.classList.add("my-2");
+
+        var repetitionsInput = document.createElement("input");
+        repetitionsInput.setAttribute("type", "number");
+        repetitionsInput.setAttribute("class", "form-control");
+        repetitionsInput.setAttribute("id", "repetitions_" + seriesNumber);
+        repetitionsInput.setAttribute("min", 0);
+        repetitionsInput.setAttribute("max", 50);
+
+        var weightLabel = document.createElement("label");
+        weightLabel.setAttribute("for", "weight_" + seriesNumber);
+        weightLabel.textContent = "Váha v sérii " + seriesNumber + " (kg):";
+        weightLabel.classList.add("my-2");
+
+        var weightInput = document.createElement("input");
+        weightInput.setAttribute("type", "number");
+        weightInput.setAttribute("class", "form-control");
+        weightInput.setAttribute("id", "weight_" + seriesNumber);
+        weightInput.setAttribute("min", 0);
+        weightInput.setAttribute("max", 600);
+
+        seriesField.appendChild(repetitionsLabel);
+        seriesField.appendChild(repetitionsInput);
+        seriesField.appendChild(weightLabel);
+        seriesField.appendChild(weightInput);
+
+        seriesFieldsContainer.appendChild(seriesField);
+    }
+}
+
+    function renderSeriesFields1(cvik) {
+        var seriesFieldsContainer = document.getElementById("seriesFields");
+        seriesFieldsContainer.innerHTML = ""; 
+
+        for (var i = 0; i < seriesCount; i++) {
+            var seriesNumber = i + 1;
+            var seriesField = document.createElement("div");
+            seriesField.classList.add("form-group");
+
+            var repetitionsLabel = document.createElement("label");
+            repetitionsLabel.setAttribute("for", "repetitions_" + seriesNumber);
+            repetitionsLabel.textContent = "Počet opakování v sérii " + seriesNumber + ":";
+            repetitionsLabel.classList.add("my-2");
+
+            var repetitionsInput = document.createElement("input");
+            repetitionsInput.setAttribute("type", "number");
+            repetitionsInput.setAttribute("class", "form-control");
+            repetitionsInput.setAttribute("id", "repetitions_" + seriesNumber);
+            repetitionsInput.setAttribute("min", 0);
+            repetitionsInput.setAttribute("max", 50);
+
+            var index = cvik.typyTreninku.indexOf(typTreninkuZkratka);
+            var poleHodnot = cvik.počtyOpakování[index].split(",");
+            var prednastavenaHodnota = parseInt(poleHodnot[i].trim());
+            repetitionsInput.value = prednastavenaHodnota;
+
+            var weightLabel = document.createElement("label");
+            weightLabel.setAttribute("for", "weight_" + seriesNumber);
+            weightLabel.textContent = "Váha v sérii " + seriesNumber + " (kg):";
+            weightLabel.classList.add("my-2");
+
+            var weightInput = document.createElement("input");
+            weightInput.setAttribute("type", "number");
+            weightInput.setAttribute("class", "form-control");
+            weightInput.setAttribute("id", "weight_" + seriesNumber);
+            weightInput.setAttribute("min", 0);
+            weightInput.setAttribute("max", 600);
+
+            seriesField.appendChild(repetitionsLabel);
+            seriesField.appendChild(repetitionsInput);
+            seriesField.appendChild(weightLabel);
+            seriesField.appendChild(weightInput);
+
+            seriesFieldsContainer.appendChild(seriesField);
+        }
+    }
+
+    function submitFeedback() {
+
+        var seriesData = [];
+        for (var i = 0; i < seriesCount; i++) {
+            var seriesNumber = i + 1;
+            var repetitions = document.getElementById("repetitions_" + seriesNumber).value;
+            var weight = document.getElementById("weight_" + seriesNumber).value;
+
+            if (uzivatelVaha.value === "") {
+                seriesData.push({
+                    Datum: dateString,
+                    cvikId: cvikId,
+                    CisloSerie: seriesNumber,
+                    PocetOpakovani: repetitions,
+                    CvicenaVaha: weight
+                });
+            } else {
+                seriesData.push({
+                    Datum: dateString,
+                    cvikId: cvikId,
+                    CisloSerie: seriesNumber,
+                    PocetOpakovani: repetitions,
+                    CvicenaVaha: weight,
+                    Vaha: uzivatelVaha.value
+                });
+            }
+        }
+
+        var dataVPohode = 1;
+
+        for (var i = 0; i < seriesData.length; i++) {
+            if (seriesData[i].PocetOpakovani > 100 || seriesData[i].PocetOpakovani < 0) {
+                dataVPohode = 0;
+                alert("Zadejte prosím pravdivé údaje.");
+            } else if (seriesData[i].CvicenaVaha > 500 || seriesData[i].CvicenaVaha < 0) {
+                dataVPohode = 0;
+                alert("Zadejte prosím pravdivé údaje.");
+            }
+        }
+
+        if (dataVPohode == 1) {
+
+                var cvikVDatabazi1 = datacviku.find(function (item) {
+                var datumVPlanu1 = dateString.slice(0, 10);
+                var datumZDatabaze1 = item.datum.slice(0, 10);
+                return item.cvikId === cvikId && datumVPlanu1 === datumZDatabaze1;
+            });
+
+            if (cvikVDatabazi1) {
+                    $.ajax({
+                        url: '/TreninkoveData/DeleteFromDatabase',
+                        type: 'POST',
+                        data: seriesData[0],
+
+                        success: function (response) {
+                                for (var i = 0; i < seriesData.length; i++) {
+                                    $.ajax({
+                                        url: '/TreninkoveData/SaveToDatabase',
+                                        type: 'POST',
+                                        data: seriesData[i],
+
+                                        success: function (response) {
+                                            location.reload(true);
+                                        },
+                                        error: function (xhr, status, error) {
+                                            console.log("chyba");
+                                        }
+                                    });
+                                }
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("chyba");
+                        }
+                    });
+
+            } else {
+
+                for (var i = 0; i < seriesData.length; i++) {
+                    $.ajax({
+                        url: '/TreninkoveData/SaveToDatabase',
+                        type: 'POST',
+                        data: seriesData[i],
+
+                        success: function (response) {
+                                    location.reload(true);
+                        },
+                        error: function (xhr, status, error) {
+                        }
+                    });
+                }
+
+                changeSeriesCount();
+                $('#myModal').modal('hide');
+            }
+        }
+    }
+
+    function zmenitPoradiCviku() {
+        var tlacitkoId = event.target.id;
+        var poradiKam = document.getElementById("poradiKam").value;
+        if (poradiKam >= 1 && poradiKam <= cviky.length) {
+
+            var seriesDatacus = [];
+            seriesDatacus.push({
+                Datum: dateString,
+                cvikId: tlacitkoId,
+                CisloSerie: poradiKam,
+                PocetOpakovani: -1,
+                CvicenaVaha: -1,
+                Vaha: -1
+            });
+            $.ajax({
+                url: '/Cvik/ZmenitPoradi',
+                type: 'POST',
+                data: seriesDatacus[0],
+
+                success: function (response) {
+                    location.reload(true);
+                },
+                error: function (xhr, status, error) {
+                }
+            });
+        } else {
+            alert("Zadejte prosím správné údaje.");
+        }
+    }
+
+
+    function openModal(modalId, cvikId) {
+      
+        var tlacitko = document.getElementById("feedbackButton2");
+        tlacitko.id = cvikId;
+
+        var myModal = new bootstrap.Modal(document.getElementById(modalId), {
+            keyboard: false
+        });
+        myModal.show();
+    }
+
+    // FUNGUJE JEN TESTUJU TAK TO ZAKOMENTUJU
+
+    if (dnes.getFullYear() < dateFromUrl.getFullYear()) {
+
+        document.getElementById("feedbackButton").style.display = "none";
+        document.getElementById("seriesFields").style.display = "none";
+
+        var seriesForm = document.getElementById("serieFormular");
+        seriesForm.style.display = "none";
+        document.getElementById('uzivatelVahaFormular').style.display = 'none';
+
+
+    } else if (dnes.getFullYear() === dateFromUrl.getFullYear()) {
+        if (dnes.getMonth() < dateFromUrl.getMonth()) {
+            document.getElementById("feedbackButton").style.display = "none";
+            document.getElementById("seriesFields").style.display = "none";
+
+            var seriesForm = document.getElementById("serieFormular");
+            seriesForm.style.display = "none";
+            document.getElementById('uzivatelVahaFormular').style.display = 'none';
+        } else if (dnes.getMonth() === dateFromUrl.getMonth()) {
+            if (dnes.getDate() < dateFromUrl.getDate()) {
+                document.getElementById("feedbackButton").style.display = "none";
+                document.getElementById("seriesFields").style.display = "none";
+
+                var seriesForm = document.getElementById("serieFormular");
+                seriesForm.style.display = "none";
+                document.getElementById('uzivatelVahaFormular').style.display = 'none';
+            }
+        }
+    }
+    // KONEC CASTI CO FUNGUJE A TESTUJU JI
+
+    renderSeriesFields();
+</script> 
+

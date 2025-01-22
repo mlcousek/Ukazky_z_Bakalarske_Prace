@@ -1,0 +1,88 @@
+﻿@model FitnessWebApp.Models.Cvik
+
+@{
+    ViewData["Title"] = "Upravit cvik";
+}
+
+<h1>Upravit cvik</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" onsubmit="return validovatFormular()">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CvikId" />
+            <div class="form-group">
+                <label asp-for="Nazev" class="control-label">Název</label>
+                <input asp-for="Nazev" id="nazevcviku" class="form-control" />
+                <span asp-validation-for="Nazev" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Partie" class="control-label">Partie</label>
+                <input asp-for="Partie" id="partiecviku" class="form-control" />
+                <span asp-validation-for="Partie" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PopisCviku" class="control-label">Popis cviku</label>
+                <input asp-for="PopisCviku" id="popisek" class="form-control" />
+                <span asp-validation-for="PopisCviku" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Uložit" class="btn btn-warning mt-3 mb-3" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<form asp-controller="Cvik" asp-action="Index" method="get">
+    <button type="submit" class="btn btn-dark">Zpět</button>
+</form>
+
+@section Scripts {
+
+
+    <script>
+        function validovatFormular() {
+            var vsechnyCviky = @Html.Raw(Json.Serialize(ViewBag.vsechnyCviky));
+            var cvikNaEdit = @Html.Raw(Json.Serialize(ViewBag.cvikNaEdit));
+
+            var nazevcviku = document.getElementById("nazevcviku").value;
+            var partiecviku = document.getElementById("partiecviku").value;
+            var popisek = document.getElementById("popisek").value;
+
+            var cvikSeStejnymNazvem = vsechnyCviky.filter(cvik => cvik.nazev === nazevcviku);
+            if (cvikSeStejnymNazvem) {
+                if (cvikSeStejnymNazvem.length === 1) {
+                    if (cvikSeStejnymNazvem[0].cvikId === cvikNaEdit.cvikId) {
+
+                    } else {
+                        alert("Tento cvik už je vytvořen");
+                        return false;
+                    }
+                } 
+            }
+
+
+            if (nazevcviku.length < 1 || nazevcviku.length > 200) {
+                alert("Zadejte platný název cviku");
+                return false;
+            }
+
+            if (partiecviku.length < 1 || partiecviku.length > 100) {
+                alert("Zadejte platný název partie cviku");
+                return false;
+            }
+
+            if (popisek.length < 1 || popisek.length > 5000) {
+                alert("Zadejte platný popisek s který má maximálně 5000 znaků.");
+                return false;
+            }
+
+
+            return true;
+        }
+    </script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

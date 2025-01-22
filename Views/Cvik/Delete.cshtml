@@ -1,0 +1,38 @@
+﻿@model FitnessWebApp.Models.Cvik
+
+@{
+    ViewData["Title"] = "Smazat cvik";
+}
+
+
+
+<h3>Opravdu chcete smazat tento cvik?</h3>
+<div>
+    
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Název
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Nazev)
+        </dd>
+        <dt class = "col-sm-2">
+            Popis cviku
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PopisCviku)
+        </dd>
+    </dl>
+    
+    <div class="button-container-cus1">
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="CvikId" />
+            <input type="submit" value="Smazat" class="btn btn-danger custom-mr" /> 
+        </form>
+
+        <form asp-controller="Cvik" asp-action="Index" method="get">
+            <button type="submit" class="btn btn-dark">Zpět</button>
+        </form>
+    </div>
+</div>

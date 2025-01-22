@@ -1,0 +1,517 @@
+﻿@model IEnumerable<FitnessWebApp.Models.TP>
+
+@{
+    ViewData["Title"] = "Index";
+
+    var TPP = ViewBag.TPP;
+    // if(TPP != null)
+    // {
+        
+    //     var StylTPP = TPP.StylTP;
+    // }
+}
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<!-- Odkazy na FullCalendar -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.print.min.css" media="print" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+<script src="~/js/cs.js"></script>
+<div id="vsechno" class="mb-3">
+    <h1>Tréninkový plán</h1>
+
+    <button id="vytvoritTP" onclick="vytvoritTP1()" class="btn btn-dark mb-3">VYTVOŘIT NOVÝ TRÉNINKOVÝ PLÁN</button>
+    <div id="calendar" class="mb-3"></div>
+    <p class="text-center" id="nejdevidet" style="display: none;">Náhled byl vygenerován pomocí aplikace pro tvorbu tréninkových plánů. &copy; @DateTime.Now.Year - Jiří Mlčoušek</p>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Zadejte aktuální váhu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalContent">Zadejte aktuální váhu (kg) (př.: 82,3)</p>
+                <div id="serieFormular" class="form-group">
+                    <input type="number" class="form-control" id="vaha" min="0" max="0" value="0">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="feedbackButton" onclick="odeslatZpetnouVazbu()">Odeslat zpětnou vazbu</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Více o TP</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <button type="button" class="btn btn-danger mb-3" id="smazatButton" onclick="smazatTP()">Smazat aktuální tréninkový plán</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (TPP != null)
+{
+    var StylTPP = TPP.StylTP;
+
+    <div class="modal fade" id="myModal5" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Vytvořit trénink</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="/TP/PridatTrenink" onsubmit="return validovatFormular()">
+                        <div class="form-group mb-3">
+                            <label for="typTreninku">Typ tréninku</label>
+                            <select id="typTreninku" name="typTreninku" class="form-control" required>
+                                <option value="" disabled selected>Vyberte typ tréninku</option>
+
+                                @if (StylTPP == "VM")
+                                {
+                                    <option value="Nohy">Nohy</option>
+                                    <option value="Ramena + biceps">Ramena + biceps</option>
+                                    <option value="Záda">Záda</option>
+                                    <option value="Hrudník + triceps">Hrudník + triceps</option>
+                                }
+                                else if (StylTPP == "PPL")
+                                {
+                                    <option value="Push">Push</option>
+                                    <option value="Pull">Pull</option>
+                                    <option value="Legs">Legs</option>
+                                }
+                                else if (StylTPP == "KR")
+                                {
+                                    <option value="Kruhový trénink 1">Kruhový trénink 1</option>
+                                    <option value="Kruhový trénink 2">Kruhový trénink 2</option>
+                                    <option value="Kruhový trénink 3">Kruhový trénink 3</option>
+                                }
+                                else if (StylTPP == "CUS")
+                                {
+                                    <!-- Předdefinované možnosti uživatele -->
+                                    @* @foreach (var customOption in ViewBag.CustomOptions)
+                                    {
+                                        <option value="@customOption">@customOption</option>
+                                    } *@
+                                    <!-- Možnost pro zadání vlastní hodnoty -->
+                                    <option value="other">Jiný</option>
+                                }
+                            </select>
+                            <input type="text" id="customTrenink" name="customTrenink" class="form-control" placeholder="Zadejte vlastní typ tréninku" style="display:none;" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="datumTreninku">Datum tréninku</label>
+                            <input type="date" id="datumTreninku" name="datumTreninku" class="form-control" required />
+                        </div>
+
+                        @* <div class="form-group mb-3">
+                            <input type="text" id="typTreninkuNovy" name="typTreninkuNovy" class="form-control" required />
+                        </div> *@
+
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-outline-primary">Přidat trénink</button>
+                            </div>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+<div id="generovaniTlacitka" @* class="button-container-cus" *@ style="display: none;">
+    <button type="button" class="btn btn-outline-dark custom-mr" onclick="generovatTP()" style="margin: 20px;">Vygenerovat náhled tréninků v plánu</button>
+    <button type="button" class="btn btn-outline-dark" onclick="generovatTPdny()" style="margin: 20px;">Vygenerovat pouze dny tréninků</button>
+ @*    <button type="button" class="btn btn-outline-dark" onclick="generovatTPtreninky()" style="margin: 20px;">Vygenerovat pouze tréninky</button> *@
+    <button type="button" class="btn btn-outline-dark float-right-custom" onclick="pridatTrenink()" style="margin: 20px;">Přidat trénink</button>
+    <button type="button" class="btn btn-outline-warning float-right-custom" onclick="viceTP()" style="margin: 20px;">...</button>
+</div>
+
+@section scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.js"></script>
+
+
+ <script>
+    document.getElementById('typTreninku').addEventListener('change', function () {
+        var customInput = document.getElementById('customTrenink');
+        if (this.value === 'other') {
+            customInput.style.display = 'block';
+            customInput.required = true;  // Odpovídající povinný atribut
+        } else {
+            customInput.style.display = 'none';
+            customInput.required = false; // Odstranění povinného atributu
+        }
+    });
+
+    function stripTime(dateString) {
+        return dateString.split("T")[0]; 
+    }
+
+    function validovatFormular() {
+        var treninkoveDny = @Html.Raw(Json.Serialize(ViewBag.treninkoveDny));
+        var denTreninku = document.getElementById("datumTreninku").value;
+
+        if (treninkoveDny) {
+            if (treninkoveDny.some(trenink => stripTime(trenink.datumTreninku) === denTreninku)) {
+                alert("V tento den už je trénink vytvořen.");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function vytvoritTP1() {
+            window.location.href = "/TP/Create";
+    }
+    function pohybMysi(event) {
+        var nejdevidet = document.getElementById('nejdevidet');
+        nejdevidet.style.display = 'none';
+    }
+        document.addEventListener('mousemove', pohybMysi);
+
+    function generovatTP() {
+        var element = document.getElementById('vsechno');
+        var nejdevidet = document.getElementById('nejdevidet');
+        nejdevidet.style.display = 'block';
+
+        var opt = {
+            margin: 0.965,
+            filename: 'treninkovy_plan.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+        };
+
+        html2pdf().set(opt).from(element).save();
+    }
+
+    function generovatTPdny() {
+        window.location.href = "/TP/NahledPlanuDny";
+    }
+
+    function generovatTPtreninky() {
+        window.location.href = "/TP/NahledPlanuTreninky";
+    }
+     function viceTP() {
+            var modal1 = document.getElementById("myModal1");
+            modal1.style.display = "block";
+            var myModal1 = new bootstrap.Modal(document.getElementById('myModal1'), {
+                keyboard: false
+            });
+            myModal1.show();
+     }
+
+    function pridatTrenink() {
+        var modal5 = document.getElementById("myModal5");
+        modal5.style.display = "block";
+        var myModal5 = new bootstrap.Modal(document.getElementById('myModal5'), {
+            keyboard: false
+        });
+        myModal5.show();
+    }
+    var uzivatelData = @Html.Raw(Json.Serialize(ViewBag.Uzivatel));
+    var datacviku = @Html.Raw(Json.Serialize(ViewBag.Datacviku));
+
+    var treninkoveData = @Html.Raw(Json.Serialize(ViewBag.DenTreninku));
+    var tpInfo = @Html.Raw(Json.Serialize(ViewBag.TP));
+
+
+
+    function smazatTP() {
+        window.location.href = "/TP/Delete1?id=" + uzivatelData[0].tpId;
+        $('#myModal1').modal('hide');
+    }
+
+    var element = document.getElementById('generovaniTlacitka');
+    var vytvoritTP = document.getElementById('vytvoritTP');
+    var dnes = new Date();
+
+
+
+        console.log("JIRKA jede bomby");
+    if (uzivatelData[0].tpId !== null) {
+        var nejpozdejsiDatum = null;
+
+        if (treninkoveData) {
+
+            for (var i = 0; i < treninkoveData.length; i++) {
+                var datum = new Date(treninkoveData[i].datumTreninku);
+                if (!nejpozdejsiDatum || datum > nejpozdejsiDatum) {
+                    nejpozdejsiDatum = datum;
+                }
+            }
+        }
+            element.style.display = 'block';
+            vytvoritTP.style.display = 'none';
+
+        if (treninkoveData) {
+            if (dnes >= nejpozdejsiDatum) {     
+                vytvoritTP.style.display = 'block';
+                if (uzivatelData[0].úroveň === 1) {
+                    $.ajax({
+                        url: '/TP/AktualizaceUrovne',
+                        type: 'POST',
+                        success: function (response) {
+                        },
+                        error: function (xhr, status, error) {
+                        }
+                    });
+                }
+            }
+        }
+
+        var staraVaha = uzivatelData[0].vaha;
+        var inputVaha = document.getElementById('vaha');
+        inputVaha.value = staraVaha;
+
+        // Nastavení min a max hodnoty váhy s odchylkou -10 a +10
+        inputVaha.min = staraVaha - 10;
+        inputVaha.max = staraVaha.vaha + 10;
+
+            console.log("JIRKA jede bomby");
+            console.log(tpInfo);
+        if (tpInfo) {
+
+             if (tpInfo[0].aktualniVaha === false) {
+                    var modal = document.getElementById("myModal");
+                    modal.style.display = "block";
+                    var myModal = new bootstrap.Modal(document.getElementById('myModal'), {
+                        keyboard: false
+                    });
+                    myModal.show(); 
+
+                    var closeBtn = modal.querySelector(".btn-close");
+                    closeBtn.onclick = function () {
+                        $('#myModal').modal('hide');
+                    }
+
+                    window.onclick = function (event) {
+                        if (event.target == modal) {
+                            $('#myModal').modal('hide');
+                        }
+                    }
+             }
+        }
+        console.log("JIRKA jede bomby");
+        if (treninkoveData) {
+            var delkaTD = treninkoveData.length;
+            var eventy = [];
+
+
+
+            // Přidání dat do pole events
+            for (var i = 0; i < delkaTD; i++) {
+                var barva;
+                switch (treninkoveData[i].typTreninku) {
+                    case "Nohy":
+                        barva = "#555555";
+                        break;
+                    case "Ramena + Biceps":
+                        barva = "#333333"; 
+                        break;
+                    case "Záda":
+                        barva = "#999999";
+                        break;
+                    case "Hrudník + triceps": 
+                        barva = "#777777";
+                    break;
+                    case "Kruhový trénink 1":
+                        barva = "#333333";
+                        break;
+                    case "Kruhový trénink 2":
+                        barva = "#555555";
+                        break;
+                    case "Kruhový trénink 3":
+                        barva = "#777777";
+                        break;
+                    case "Kruhový trénink 4":
+                        barva = "#999999";
+                        break;
+                    case "Legs":
+                        barva = "#333333";
+                        break;
+                    case "Push":
+                        barva = "#555555";
+                        break;
+                    case "Pull":
+                        barva = "#777777";
+                        break;
+                    default:
+                        barva = "gray"; 
+
+                }
+                var idCvikuVPlanu = []; 
+                var dobre = 1;
+                datacviku.forEach(function (zaznam) {
+
+
+                        if (zaznam.datum.toString().substring(0, 10) === treninkoveData[i].datumTreninku.toString().substring(0, 10)) {
+
+                            if (zaznam.tpId === treninkoveData[i].tpId) {
+                            
+                                if (!idCvikuVPlanu.includes(zaznam.cvikId)) {
+                                    idCvikuVPlanu.push(zaznam.cvikId);
+                                }
+                            }
+                        }
+                
+                });
+                var cvikIdecka = treninkoveData[i].cviky.map(cvik => cvik.cvikId);
+                cvikIdecka = cvikIdecka.sort((a, b) => a - b);
+                idCvikuVPlanu = idCvikuVPlanu.sort((a, b) => a - b);
+
+
+
+                if (idCvikuVPlanu.length === cvikIdecka.length) {
+                    for (let i = 0; i < idCvikuVPlanu.length; i++) {
+                        if (idCvikuVPlanu[i] === cvikIdecka[i]) {
+
+                        } else {
+                            dobre = 0;
+                        }
+                    }
+                    if (dobre === 1) {
+                        barva = "#17E683";
+                    }
+                }
+
+                eventy[i] = {
+                    title: treninkoveData[i].typTreninku,
+                    start: treninkoveData[i].datumTreninku,
+                    allDay: true,
+                    color: barva,
+                    className: moment(treninkoveData[i].datumTreninku).format("YYYY-MM-DD")
+                };
+               // console.log(eventy);
+            }
+        }
+    
+        $(document).ready(function () {
+            function changeEventColor(event, color) {
+                event.css("background-color", color);
+            }
+
+            $('#calendar').fullCalendar({
+                locale: 'cs',
+                header: {
+                    left: 'prev, next today',
+                    center: 'title',
+                    right: 'month, basicWeek, basicDay'
+                },
+                defaultView: 'month',
+                eventClick: function (event) {
+                            var viewName = event.title.replace(' + ', '_').replace(' ', '_')
+                            var dateParam = moment(event.start).format("YYYY-MM-DD");
+                            window.location.href = '/Trenink/Trenink?date=' + dateParam; 
+                },
+                eventMouseover: function (event, jsEvent, view) {
+                            changeEventColor($(this), "#859199"); 
+                },
+                eventMouseout: function (event, jsEvent, view) {
+                    changeEventColor($(this), event.color); 
+                },
+                events: eventy,
+                firstDay: 1
+            }
+            )
+        }
+        )
+
+        function odeslatZpetnouVazbu() {
+            var novaVaha = document.getElementById("vaha").value;
+                var novaVahaCislo = parseInt(novaVaha, 10);
+           
+            var dataVPohode = 1;
+            if (novaVahaCislo >= staraVaha) {
+                if (novaVahaCislo - 11 > staraVaha) {
+                    dataVPohode = 0;
+                }
+            } else {
+                if (novaVahaCislo + 11 < staraVaha) {
+                    dataVPohode = 0;
+                }
+            }
+            if (dataVPohode === 0) {
+                alert("Zadejte prosím pravdivé údaje.");
+            }
+
+            if (dataVPohode === 1) {
+
+                var vahaData = [];
+                vahaData.push({
+                        Váha: novaVaha.toString()
+                });
+
+
+                $.ajax({
+                    url: '/TP/AktualizaceVahy',
+                    type: 'POST',
+                    data: vahaData[0],
+
+                    success: function (response) {
+                        location.reload(true);
+                    },
+                    error: function (xhr, status, error) {
+                    }
+                });
+            }
+        }
+
+        function generovatPDF1() {
+            $.ajax({
+                url: '/TP/PDFView',
+                type: 'GET',
+                success: function (response) {
+                },
+                error: function (xhr, status, error) {
+                }
+            });
+        }
+
+        function generovatPDF() {
+                    window.location.href = "/TP/PDFView";
+        }
+
+        function downloadPDF(pdfData) {
+            var blob = new Blob([pdfData], { type: 'application/pdf' });
+            var url = window.URL.createObjectURL(blob);
+
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'Tréninkový_plán.pdf'; 
+            document.body.appendChild(a);
+
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+    }
+
+</script> 
+}

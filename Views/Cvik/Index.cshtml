@@ -1,0 +1,90 @@
+﻿@model IEnumerable<FitnessWebApp.Models.Cvik>
+
+@{
+    ViewData["Title"] = "Databáze cviků";
+}
+
+<h1>Databáze cviků</h1>
+
+
+
+<div class="form-group">
+    <label for="partieSelect">Vyberte Partii:</label>
+    <select class="form-control" id="partieSelect">
+        <option value="all">Všechny</option>
+        @foreach (var partie in Model.Select(c => c.Partie).Distinct())
+        {
+            <option value="@partie">@partie</option>
+        }
+    </select>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @* @Html.DisplayNameFor(model => model.Nazev) *@ Název
+            </th>
+            <th>
+                Popis cviku
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        if (item.UzivatelId == @ViewBag.uzivatelId)
+        {
+
+                <tr id="@Html.DisplayFor(modelItem => item.Partie)">
+                <td>
+                        @Html.DisplayFor(modelItem => item.Nazev)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PopisCviku)
+                </td>
+                <td>
+                    @if (item.cvikVytvorenUzivatelem == true)
+                    {
+                        <div class="button-container-cus1">
+                            <form asp-controller="Cvik" asp-action="Edit" asp-route-id="@item.CvikId" method="get">
+                                <button type="submit" class="btn btn-outline-warning btn-sm custom-mr">Upravit</button>
+                            </form>
+                            <form asp-controller="Cvik" asp-action="Delete" asp-route-id="@item.CvikId" method="get">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Smazat</button>
+                            </form>
+                        </div>
+                    }
+                </td>
+            </tr>
+        }
+}
+    </tbody>
+</table>
+
+<div class="button-container-cus">
+    <form method="get" action="/TP/Index">
+        <button class="btn btn-dark mb-3" type="submit">Přesunout se na plán</button>
+    </form>
+    <form method="get" action="/Cvik/Create">
+        <button class="btn btn-outline-dark float-right-custom mb-3" type="submit">Vytvoř si svůj cvik</button>
+    </form>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var partieSelect = document.getElementById('partieSelect');
+        partieSelect.addEventListener('change', function () {
+            var selectedPartie = this.value;
+            var rows = document.querySelectorAll('tbody tr');
+            rows.forEach(function (row) {
+                var rowId = row.getAttribute('id');
+                if (selectedPartie === rowId || selectedPartie === 'all') {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,88 @@
+﻿@model IEnumerable<FitnessWebApp.Models.Cvik>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Cviky</h1>
+
+
+<div class="form-group">
+    <label for="partieSelect">Vyberte Partii:</label>
+    <select class="form-control" id="partieSelect">
+        <option value="all">Všechny</option>
+        @foreach (var partie in Model.Select(c => c.Partie).Distinct())
+        {
+            <option value="@partie">@partie</option>
+        }
+    </select>
+</div>
+
+
+@{
+    var datumTreninku = @ViewBag.datum;
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @* @Html.DisplayNameFor(model => model.Nazev) *@ Název
+            </th>
+            <th>
+               Popis cviku
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            if (item.UzivatelId == @ViewBag.uzivatelId)
+            {
+
+                <tr id="@Html.DisplayFor(modelItem => item.Partie)">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nazev)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PopisCviku)
+                    </td>
+                    <td>
+                        <form method="get" action="/Cvik/NastavitData">
+                            <input type="hidden" name="id" value="@item.CvikId" />
+                            <input type="hidden" name="date" value="@datumTreninku" />
+                            <button class="btn btn-outline-dark btn-sm" type="submit">Přidat cvik do tréninku</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<div class="button-container-cus">
+    <form method="get" action="/TP/Index">
+        <button class="btn btn-dark mb-3" type="submit">Zpět na plán</button>
+    </form>
+    <form method="get" action="/Cvik/Create1">
+        <input type="hidden" name="datum" value="@datumTreninku">
+        <button class="btn btn-outline-dark float-right-custom mb-3" type="submit">Vytvoř si svůj cvik</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var partieSelect = document.getElementById('partieSelect');
+        partieSelect.addEventListener('change', function () {
+            var selectedPartie = this.value;
+            var rows = document.querySelectorAll('tbody tr');
+            rows.forEach(function (row) {
+                var rowId = row.getAttribute('id');
+                if (selectedPartie === rowId || selectedPartie === 'all') {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>

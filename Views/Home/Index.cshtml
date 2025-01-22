@@ -1,0 +1,199 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Uzivatel> SignInManager
+@inject UserManager<Uzivatel> UserManager
+@{
+    ViewData["Title"] = "Domovská Stránka";
+}
+
+
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <section id="mainimage" class="mainimage background-section1">
+            <div class="container">
+                <div class="text-center">
+                    <h1 class="display-4">Aplikace pro tvorbu tréninkových plánů</h1>
+                    <h2>Vítejte</h2>
+                    <p>Pomůžeme ti k dosažení tvých fitness cílů.</p>
+                </div>
+            </div>
+    </section>
+
+    <div class="modal fade" id="myModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel2">Jak často chcete být tázáni na aktualizaci váhy?</h5>
+                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="jakcastoaktualizacevahy" class="form-group">
+                        <select class="form-control" id="frekvence_aktualizace">
+                            <option value="1" selected>Každý den</option>
+                            <option value="3">Každé 3 dny</option>
+                            <option value="5">Každých 5 dní</option>
+                            <option value="7">Každý týden</option>
+                            <option value="14">Každé dva týdny</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-dark" id="feedbackButton" onclick="odeslatData()">Odeslat</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <section id="mainimage" class="mainimage background-section">
+        <div class="container">
+            <div class="text-center">
+                <h1 class="display-4">Aplikace pro tvorbu tréninkových plánů</h1>
+                <h2>Vítejte</h2>
+                <p>Pomůžeme ti k dosažení tvých fitness cílů.</p>
+            </div>
+        </div>
+    </section>
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    @section scripts{
+        <script>
+            var uzivatelData = @Html.Raw(Json.Serialize(ViewBag.Uzivatel));
+            if (uzivatelData[0].pridaneData === false) {
+                $.ajax({
+                    url: '/Cvik/PridejData',
+                    type: 'GET',
+                    success: function (response) {
+                        
+                    },
+                    error: function (xhr, status, error) {
+                        
+                    }
+                });
+            }
+
+            var testovaciData = @Html.Raw(Json.Serialize(ViewBag.TestovaciData));
+            if (uzivatelData[0].email === "test@test.cz") {
+                if (testovaciData === 1) 
+                {
+                    $.ajax({
+                        url: '/TP/PridatTestovaciData',
+                        type: 'GET',
+                        success: function (response) {
+
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    });
+                }
+            }
+
+            var dnesek = new Date();
+            var pomocneDatum = new Date(uzivatelData[0].pomocneDatum);
+
+            var pomocneDatumString = pomocneDatum.toISOString();
+            var dnesekString = dnesek.toISOString();
+
+            var pomocna = uzivatelData[0].jakCastoAktualizovatVahu;
+           
+
+            if (uzivatelData[0].jakCastoAktualizovatVahu === 0) {
+            var modal = document.getElementById("myModal2");
+            modal.style.display = "block";
+            var myModal = new bootstrap.Modal(document.getElementById('myModal2'), {
+                keyboard: false
+            });
+            myModal.show();
+            }
+
+
+            var rozdilRoku = dnesek.getFullYear() - pomocneDatum.getFullYear();
+            if (rozdilRoku > 0) {
+                if (dnesek.getMonth() >= pomocneDatum.getMonth()) {
+                    if (dnesek.getDate() >= pomocneDatum.getDate()) {
+
+                        var seriesDatacus = [];
+                        seriesDatacus.push({
+                            Datum: pomocneDatumString,
+                            cvikId: -1,
+                            CisloSerie: -1,
+                            PocetOpakovani: -1,
+                            CvicenaVaha: -1,
+                            Vaha: -1
+                        });
+
+                        $.ajax({
+                            url: '/Home/ZmenitVek',
+                            type: 'POST',
+                            data: seriesDatacus[0],
+
+                            success: function (response) {
+                                
+                            },
+                            error: function (xhr, status, error) {
+                            }
+                        });
+
+                    }
+                }
+            }
+
+            function odeslatData() {
+           
+                var selectElement = document.getElementById("frekvence_aktualizace");
+                var selectedValue = selectElement.value; 
+
+                var seriesDatacus = [];
+                seriesDatacus.push({
+                    Datum: -1,
+                    cvikId: selectedValue,
+                    CisloSerie: -1,
+                    PocetOpakovani: -1,
+                    CvicenaVaha: -1,
+                    Vaha: -1
+                });
+
+                $.ajax({
+                    url: '/Home/ZmenitJakCastoSeAktualizujeVaha',
+                    type: 'POST',
+                    data: seriesDatacus[0],
+
+                    success: function (response) {
+                        location.reload(true);
+                    },
+                    error: function (xhr, status, error) {
+                    }
+                });
+            }
+
+            
+
+        </script>
+    }
+}
+else
+{
+    @section scripts {
+        <script>
+            var testovaciData = @Html.Raw(Json.Serialize(ViewBag.TestovaciData));
+            if (testovaciData === 0) {
+                $.ajax({
+                    url: '/Home/PridatTestovaciData1',
+                    type: 'GET',
+                    success: function (response) {
+
+                    },
+                    error: function (xhr, status, error) {
+
+                    }
+                });
+            }
+        </script>
+    } 
+}

@@ -1,0 +1,89 @@
+﻿@* NEPOUZIVA SE NAKONEC SLO BY VYMAZAT ALE JE TO SKODA, KDYZ JSEM SE S TIM JEBAL *@
+@model NahledPlanuModel
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<div id="vsechno">
+    <h2 class="display-4">Tréninkový plán</h2>
+
+    <h2 class="mt-3">Konkrétní tréninky</h2>
+
+    @foreach (var trenink in Model.Treninky)
+    {
+        <h3 class="mt-4">@trenink.TypTreninku (@trenink.DatumTreninku.ToString("dd/MM/yyyy"))</h3>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Název</th>
+                        <th scope="col">Počet sérií</th>
+                        <th scope="col">Počet opakování</th>
+                        <th scope="col">Pauza mezi sériemi</th>
+                        <th scope="col">Partie</th>
+                        <th scope="col">Popis cviku</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    @foreach (var cvik in trenink.Cviky)
+                    {
+                        var indexTTP = 0;
+
+
+                        string suffix = @trenink.TypTreninku switch
+                        {
+                            "Nohy" => "Nohy",
+                            "Ramena + biceps" => "RamBic",
+                            "Záda" => "Zada",
+                            "Hrudník + triceps" => "HrTric",
+                            "Push" => "Push",
+                            "Pull" => "Pull",
+                            "Legs" => "Legs",
+                            "Kruhový trénink 1" => "1",
+                            "Kruhový trénink 2" => "2",
+                            "Kruhový trénink 3" => "3",
+                            _ => ""
+                        };
+
+
+                        indexTTP = cvik.TypyTreninku.IndexOf(Model.TP.DruhTP + Model.TP.StylTP + suffix);
+
+                        <tr>
+                            <td>@cvik.Nazev</td>
+                            <td>@cvik.PočtySérií[indexTTP]</td>
+                            <td>@cvik.PočtyOpakování[indexTTP]</td>
+                            <td>@cvik.PauzyMeziSériemi[indexTTP]</td>
+                            <td>@cvik.Partie</td>
+                            <td>@cvik.PopisCviku</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    <p>Náhled byl vygenerován pomocí aplikace pro tvorbu tréninkových plánů. &copy; @DateTime.Now.Year - Jiří Mlčoušek</p>
+</div>
+
+<script>
+    var element = document.getElementById('vsechno');
+
+    var opt = {
+        margin: 0.965,
+        filename: 'vsechny_tréninky.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+
+   
+
+    setTimeout(function () {
+        window.location.href = "/TP/Index";
+    }, 10000);
+</script>

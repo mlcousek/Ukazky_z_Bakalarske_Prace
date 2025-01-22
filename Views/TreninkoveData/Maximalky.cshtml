@@ -1,0 +1,438 @@
+﻿@model IEnumerable<FitnessWebApp.Models.TreninkoveData>
+
+@{
+    ViewData["Title"] = "Maximálky";
+}
+
+
+
+<h1>Maximálky</h1>
+<p class="pridejData">Zatím jsi nezapsal žádné data!</p>
+
+
+<div id="maximalky"></div>
+<div id="buttons"></div> 
+<p class="vyber">Vyber trénink!</p>
+<div id="info"></div>
+
+<style>
+    .btn-spacing {
+        margin-right: 1em; 
+        margin-bottom: 1em;
+    }
+</style>
+
+<script>
+    var treninkovedata = @Html.Raw(Json.Serialize(ViewBag.treninkovedata));
+    var tpdata = @Html.Raw(Json.Serialize(ViewBag.tpdata));
+
+    if (treninkovedata.length !== 0) {
+        document.querySelector('.pridejData').style.display = 'none'
+    
+        var grafy = {};
+
+        for (var i = 0; i < tpdata.length; i++) {
+
+            if (tpdata[i].stylTP === "VM" && tpdata[i].druhTP === "BSH") {
+                var vmnohyData = filterDataPodleTypuTreninku(treninkovedata, 'BSHVMNohy');
+                var vmramenaData = filterDataPodleTypuTreninku(treninkovedata, 'BSHVMRamBic');
+                var vmhrudnikData = filterDataPodleTypuTreninku(treninkovedata, 'BSHVMHrTric');
+                var vmzadaData = filterDataPodleTypuTreninku(treninkovedata, 'BSHVMZada');
+                var noveGrafy = { vmnohyData, vmramenaData, vmhrudnikData, vmzadaData };
+                for (var graf in noveGrafy) {
+                    if (grafy.hasOwnProperty(graf)) {
+                        grafy[graf] = grafy[graf].concat(noveGrafy[graf]);
+                    }
+                    else {
+                        grafy[graf] = noveGrafy[graf];
+                    }
+                }
+            }
+            if (tpdata[i].stylTP === "VM" && tpdata[i].druhTP === "RV") {
+                var vmnohyData = filterDataPodleTypuTreninku(treninkovedata, 'RVVMNohy');
+                var vmramenaData = filterDataPodleTypuTreninku(treninkovedata, 'RVVMRamBic');
+                var vmhrudnikData = filterDataPodleTypuTreninku(treninkovedata, 'RVVMHrTric');
+                var vmzadaData = filterDataPodleTypuTreninku(treninkovedata, 'RVVMZada');
+                var noveGrafy = { vmnohyData, vmramenaData, vmhrudnikData, vmzadaData };
+                for (var graf in noveGrafy) {
+                    if (grafy.hasOwnProperty(graf)) {
+                        grafy[graf] = grafy[graf].concat(noveGrafy[graf]);
+                    }
+                    else {
+                        grafy[graf] = noveGrafy[graf];
+                    }
+                }
+            }
+            if (tpdata[i].stylTP === "VM" && tpdata[i].druhTP === "SR") {
+                var vmnohyData = filterDataPodleTypuTreninku(treninkovedata, 'SRVMNohy');
+                var vmramenaData = filterDataPodleTypuTreninku(treninkovedata, 'SRVMRamBic');
+                var vmhrudnikData = filterDataPodleTypuTreninku(treninkovedata, 'SRVMHrTric');
+                var vmzadaData = filterDataPodleTypuTreninku(treninkovedata, 'SRVMZada');
+                var noveGrafy = { vmnohyData, vmramenaData, vmhrudnikData, vmzadaData };
+                for (var graf in noveGrafy) {
+                    if (grafy.hasOwnProperty(graf)) {
+                        grafy[graf] = grafy[graf].concat(noveGrafy[graf]);
+                    }
+                    else {
+                        grafy[graf] = noveGrafy[graf];
+                    }
+                }
+            }
+            if (tpdata[i].stylTP === "KR" && tpdata[i].druhTP === "BSH") {
+                var kr1Data = filterDataPodleTypuTreninku(treninkovedata, 'BSHKR1');
+                var kr2Data = filterDataPodleTypuTreninku(treninkovedata, 'BSHKR2');
+                var kr3Data = filterDataPodleTypuTreninku(treninkovedata, 'BSHKR3');
+                var noveGrafy = { kr1Data, kr2Data, kr3Data };
+                for (var graf in noveGrafy) {
+                    if (grafy.hasOwnProperty(graf)) {
+                        grafy[graf] = grafy[graf].concat(noveGrafy[graf]);
+                    }
+                    else {
+                        grafy[graf] = noveGrafy[graf];
+                    }
+                }
+            }
+            if (tpdata[i].stylTP === "KR" && tpdata[i].druhTP === "RV") {
+                var kr1Data = filterDataPodleTypuTreninku(treninkovedata, 'RVKR1');
+                var kr2Data = filterDataPodleTypuTreninku(treninkovedata, 'RVKR2');
+                var kr3Data = filterDataPodleTypuTreninku(treninkovedata, 'RVKR3');
+                var noveGrafy = { kr1Data, kr2Data, kr3Data };
+                for (var graf in noveGrafy) {
+                    if (grafy.hasOwnProperty(graf)) {
+                        grafy[graf] = grafy[graf].concat(noveGrafy[graf]);
+                    }
+                    else {
+                        grafy[graf] = noveGrafy[graf];
+                    }
+                }
+            }
+            if (tpdata[i].stylTP === "KR" && tpdata[i].druhTP === "SR") {
+                var kr1Data = filterDataPodleTypuTreninku(treninkovedata, 'SRKR1');
+                var kr2Data = filterDataPodleTypuTreninku(treninkovedata, 'SRKR2');
+                var kr3Data = filterDataPodleTypuTreninku(treninkovedata, 'SRKR3');
+                var noveGrafy = { kr1Data, kr2Data, kr3Data };
+                for (var graf in noveGrafy) {
+                    if (grafy.hasOwnProperty(graf)) {
+                        grafy[graf] = grafy[graf].concat(noveGrafy[graf]);
+                    }
+                    else {
+                        grafy[graf] = noveGrafy[graf];
+                    }
+                }
+            }
+            if (tpdata[i].stylTP === "PPL" && tpdata[i].druhTP === "BSH") {
+                var pplpushData = filterDataPodleTypuTreninku(treninkovedata, 'BSHPPLPush');
+                var pplpullData = filterDataPodleTypuTreninku(treninkovedata, 'BSHPPLPull');
+                var ppllegsData = filterDataPodleTypuTreninku(treninkovedata, 'BSHPPLLegs');
+                var noveGrafy = { pplpushData, pplpullData, ppllegsData };
+                for (var graf in noveGrafy) {
+                    if (grafy.hasOwnProperty(graf)) {
+                        grafy[graf] = grafy[graf].concat(noveGrafy[graf]);
+                    }
+                    else {
+                        grafy[graf] = noveGrafy[graf];
+                    }
+                }
+            }
+            if (tpdata[i].stylTP === "PPL" && tpdata[i].druhTP === "RV") {
+                var pplpushData = filterDataPodleTypuTreninku(treninkovedata, 'RVPPLPush');
+                var pplpullData = filterDataPodleTypuTreninku(treninkovedata, 'RVPPLPull');
+                var ppllegsData = filterDataPodleTypuTreninku(treninkovedata, 'RVPPLLegs');
+                var noveGrafy = { pplpushData, pplpullData, ppllegsData };
+                for (var graf in noveGrafy) {
+                    if (grafy.hasOwnProperty(graf)) {
+                        grafy[graf] = grafy[graf].concat(noveGrafy[graf]);
+                    }
+                    else {
+                        grafy[graf] = noveGrafy[graf];
+                    }
+                }
+            }
+            if (tpdata[i].stylTP === "PPL" && tpdata[i].druhTP === "SR") {
+                var pplpushData = filterDataPodleTypuTreninku(treninkovedata, 'SRPPLPush');
+                var pplpullData = filterDataPodleTypuTreninku(treninkovedata, 'SRPPLPull');
+                var ppllegsData = filterDataPodleTypuTreninku(treninkovedata, 'SRPPLLegs');
+                var noveGrafy = { pplpushData, pplpullData, ppllegsData };
+                for (var graf in noveGrafy) {
+                    if (grafy.hasOwnProperty(graf)) {
+                        grafy[graf] = grafy[graf].concat(noveGrafy[graf]);
+                    }
+                    else {
+                        grafy[graf] = noveGrafy[graf];
+                    }
+                }
+            }
+        }
+
+        function filterDataPodleTypuTreninku(data, typTreninku) {
+            return data.filter(entry => entry.cvik.typyTreninku.includes(typTreninku));
+        }
+
+        var pocetVypisaniBench = 0;
+        var pocetVypisaniMrtvola = 0;
+        var pocetVypisaniDrep = 0;
+        Object.keys(grafy).forEach(function (kategorie) {
+            var dataKategorie = grafy[kategorie];
+
+            // Seskupení dat podle cviku
+            var groupedByExercise = {};
+            dataKategorie.forEach(function (cvikData) {
+                var cvikName = cvikData.cvik.nazev;
+                if (!groupedByExercise[cvikName]) {
+                    groupedByExercise[cvikName] = [];
+                }
+                groupedByExercise[cvikName].push(cvikData);
+            });
+            
+            Object.keys(groupedByExercise).forEach(function (cvikName) {
+                var cvikDataForExercise = groupedByExercise[cvikName];
+
+                if (pocetVypisaniBench === 0) {
+                    //console.log(pocetVypisaniBench);
+                    var isBenchpress = cvikDataForExercise.some(function (cvikData) {
+                        if (cvikData.cvik.nazev === 'Benchpress') {
+                            pocetVypisaniBench = 1;
+                        }
+                        return cvikData.cvik.nazev === 'Benchpress'; 
+                    });
+                }
+
+                if (pocetVypisaniMrtvola === 0){
+                    var isDeadlift = cvikDataForExercise.some(function (cvikData) {
+                        if (cvikData.cvik.nazev === 'Mrtvý tah') {
+                            pocetVypisaniMrtvola = 1;
+                        }
+                        return cvikData.cvik.nazev === 'Mrtvý tah'; 
+                    });
+                }
+
+                if (pocetVypisaniDrep === 0) {
+                    var isSquat = cvikDataForExercise.some(function (cvikData) {
+                        if (cvikData.cvik.nazev === 'Dřepy') {
+                            pocetVypisaniDrep = 1;
+                        }
+                        return cvikData.cvik.nazev === 'Dřepy';
+                    });
+                }
+
+                if (isBenchpress || isDeadlift || isSquat) {
+                    var maximalkyContainer = document.createElement('div');
+                    maximalkyContainer.classList.add('maximalky-container');
+                    document.getElementById('maximalky').appendChild(maximalkyContainer);
+                    var maximalkyCast = document.getElementById('maximalky');
+                    maximalkyCast.classList.add('text-center');
+                }
+
+                
+                var infoContainer = document.createElement('div');
+                infoContainer.classList.add('info-container');
+                
+                document.getElementById('info').appendChild(infoContainer);
+
+                var adjustedData = {};
+                cvikDataForExercise.forEach(function (cvikData) {
+                    var datum = cvikData.datum;
+                    var cvicenaVaha = cvikData.cvicenaVaha;
+                    var pocetOpakovani = cvikData.pocetOpakovani;
+                    var aktualniVahaUzivatele = cvikData.vahaUzivatele;
+                    
+                    infoContainer.id = cvikData.cvikId;
+                    if (isBenchpress || isDeadlift || isSquat)
+                    {
+                        maximalkyContainer.id = cvikData.cvikId + "max";
+                    }
+
+                    if (!adjustedData[datum]) {
+                        adjustedData[datum] = { maxVaha: cvicenaVaha, sumaVah: cvicenaVaha * pocetOpakovani, pocetSérií: 1, pocetOpakovani: pocetOpakovani, vahaUzivatele: aktualniVahaUzivatele };
+                    } else {
+                        adjustedData[datum].maxVaha = Math.max(adjustedData[datum].maxVaha, cvicenaVaha);
+                        adjustedData[datum].sumaVah += cvicenaVaha * pocetOpakovani;
+                        adjustedData[datum].pocetSérií++;
+                        adjustedData[datum].pocetOpakovani += pocetOpakovani;
+                    }
+                });
+
+                var dates = Object.keys(adjustedData);
+                var maxVahy = dates.map(date => adjustedData[date].maxVaha);
+                var prumVahy = dates.map(date => adjustedData[date].sumaVah / adjustedData[date].pocetOpakovani);
+                var sumaVah = dates.map(date => adjustedData[date].sumaVah);
+                var vahyUzivatele = dates.map(date => adjustedData[date].vahaUzivatele);
+
+                //Data do souhrnu
+                var maximalniVaha = Math.max(...maxVahy);
+                var indexMaxVaha = maxVahy.indexOf(maximalniVaha);
+                var vahaUzivatelePriMaxVaze = vahyUzivatele[indexMaxVaha];
+                var datumMaximalniVahy = dates[indexMaxVaha];
+                datumMaximalniVahy = datumMaximalniVahy.slice(0, 10);
+
+                const dateParts = datumMaximalniVahy.split("-");
+                // Nové pořadí: den, měsíc, rok
+                const year = dateParts[0];  
+                const month = dateParts[1]; 
+                const day = dateParts[2];   
+                const formattedDate = `${parseInt(day)}. ${parseInt(month)}. ${year}`;
+
+                // Vytvoření HTML obsahu informačního kontejneru s přidanými daty
+                infoContainer.innerHTML = `
+                    <p>${cvikName}: ${maximalniVaha}kg (Tělesná váha: ${vahaUzivatelePriMaxVaze}kg, Datum: ${formattedDate})</p>
+                `;
+
+                if (isBenchpress || isDeadlift || isSquat) {
+                    maximalkyContainer.innerHTML = `
+                        <h3>${cvikName}: ${maximalniVaha}kg (Tělesná váha: ${vahaUzivatelePriMaxVaze}kg, Datum: ${formattedDate})</h3>
+                    `;
+                }
+
+                for (var i = 0; i < dates.length; i++) {
+                    dates[i] = dates[i].slice(0, 10);
+                }
+            });
+        });
+
+        Object.keys(grafy).forEach(function (kategorie) {
+            var button = document.createElement('button');
+            button.id = tlacitkoText(kategorie);
+            button.textContent = tlacitkoText(kategorie);
+            button.classList.add('btn', 'btn-dark', 'btn-spacing');
+            button.addEventListener('click', function () {
+                
+                var kliknuteTlacitkoId = this.id;
+
+                var ziskanaKategorie = ziskatKategorii(kliknuteTlacitkoId);
+
+                var cvikyCoChciVypsat = grafy[ziskanaKategorie];
+
+                var bezDuplikatu = odstranDuplikaty(cvikyCoChciVypsat);
+
+                var infoDiv1 = document.getElementById('info');
+
+                var infoContainers1 = infoDiv1.getElementsByClassName('info-container');
+
+                for (var i = 0; i < infoContainers1.length; i++) {
+                    infoContainers1[i].style.display = 'none';
+                }
+
+                for (var i = 0; i < bezDuplikatu.length; i++) {
+                    var info = document.getElementById(bezDuplikatu[i].cvikId);
+
+                    info.style.display = 'block';
+                }
+                document.querySelector('.vyber').style.display = 'none'
+            });
+             document.getElementById('buttons').appendChild(button);
+        });
+
+        function odstranDuplikaty(data) {
+            var uniqueData = {};
+            data.forEach(item => {
+                if (!uniqueData[item.cvikId]) {
+                    uniqueData[item.cvikId] = item;
+                }
+            });
+            return Object.values(uniqueData);
+        }
+
+        function ziskatKategorii(text) {
+            if (text === "Nohy") {
+                return "vmnohyData";
+            } else if (text === "Ramena + biceps") {
+                return "vmramenaData";
+            } else if (text === "Hrudník + triceps") {
+                return "vmhrudnikData";
+            } else if (text === "Záda") {
+                return "vmzadaData";
+            } else if (text === "Kruhový trénink 1") {
+                return "kr1Data";
+            } else if (text === "Kruhový trénink 2") {
+                return "kr2Data";
+            } else if (text === "Kruhový trénink 3") {
+                return "kr3Data";
+            } else if (text === "Push") {
+                return "pplpushData";
+            } else if (text === "Pull") {
+                return "pplpullData";
+            } else if (text === "Legs") {
+                return "ppllegsData";
+            }
+            return " ";
+        }
+
+        function tlacitkoText(kategorie) {
+            if (kategorie === "vmnohyData") {
+                return "Nohy";
+            } else if (kategorie === "vmramenaData") {
+                return "Ramena + biceps";
+            } else if (kategorie === "vmhrudnikData") {
+                return "Hrudník + triceps";
+            } else if (kategorie === "vmzadaData") {
+                return "Záda";
+            } else if (kategorie === "kr1Data") {
+                return "Kruhový trénink 1";
+            } else if (kategorie === "kr2Data") {
+                return "Kruhový trénink 2";
+            } else if (kategorie === "kr3Data") {
+                return "Kruhový trénink 3";
+            } else if (kategorie === "pplpushData") {
+                return "Push";
+            } else if (kategorie === "pplpullData") {
+                return "Pull";
+            } else if (kategorie === "ppllegsData") {
+                return "Legs";
+            }
+            return " ";
+        }
+
+        var i = 0;
+
+        Object.keys(grafy).forEach(function (kategorie) {
+            var uniqueCviky = [];
+            Object.keys(grafy[kategorie]).forEach(function (cvik) {
+                var nazevCviku = grafy[kategorie][cvik].cvik.nazev;
+                var idCviku = grafy[kategorie][cvik].cvikId;
+
+                if (!uniqueCviky.includes(nazevCviku)) {
+                    uniqueCviky.push(nazevCviku); 
+                   // console.log(uniqueCviky);
+
+                    var button = document.createElement('button');
+                    button.id = tlacitkoText(kategorie);
+                    button.textContent = nazevCviku;
+                    button.classList.add('btn', 'btn-light', 'btn-spacing');
+                    button.addEventListener('click', function () {
+                        
+                        var infoDiv1 = document.getElementById('info');
+                        var infoContainers1 = infoDiv1.getElementsByClassName('info-container');
+
+                        for (var i = 0; i < infoContainers1.length; i++) {
+                            infoContainers1[i].style.display = 'none';
+                        }
+                        
+                        var info = document.getElementById(idCviku);
+                        
+                        info.style.display = 'block';
+                    });
+                }
+            });
+            i++;
+        });
+
+        Object.keys(grafy).forEach(function (kategorie) {
+            var containerId = tlacitkoText(kategorie) + 'butt';
+            var container = document.getElementById(containerId);
+            if (container) {
+                container.style.display = 'none';
+            }
+        });
+
+        var infoDiv = document.getElementById('info');
+       
+        var infoContainers = infoDiv.getElementsByClassName('info-container');
+        for (var i = 0; i < infoContainers.length; i++) {
+            
+            infoContainers[i].style.display = 'none';
+        }
+    } else {
+        document.querySelector('.vyber').style.display = 'none'
+    }
+
+</script>

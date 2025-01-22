@@ -1,0 +1,134 @@
+﻿@model FitnessWebApp.Models.Cvik
+
+@{
+    ViewData["Title"] = "Vytvořit vlastní cvik";
+}
+
+<h1>Vytvořit vlastní cvik</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" onsubmit="return validovatFormular()">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mb-3">
+                <label asp-for="Nazev" class="control-label">Název</label>
+                <input asp-for="Nazev" id="nazevcviku" class="form-control" />
+                <span asp-validation-for="Nazev" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Partie" class="control-label"></label>
+                <input asp-for="Partie" id="partiecviku" class="form-control" />
+                <span asp-validation-for="Partie" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="PočtySérií" class="control-label">Počet sérií (př. 4)</label>
+                <input asp-for="PočtySérií" id="pocetSerií" type="number" min="1" max="15" class="form-control" />
+                <span asp-validation-for="PočtySérií" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="PočtyOpakování" class="control-label">Počet opakování (př. 10, 10, 10) (pokud jedna série př. 10)</label>
+                <input asp-for="PočtyOpakování" class="form-control" id="opakování" />
+                <span asp-validation-for="PočtyOpakování" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="PauzyMeziSériemi" id="pauzaText" class="control-label">Pauza mezi sériemi (s) (př. 60)</label>
+                <input asp-for="PauzyMeziSériemi" type="number" min="0" max="300" class="form-control" id="pauza1" />
+                <span asp-validation-for="PauzyMeziSériemi" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="PopisCviku" class="control-label">Popis cviku</label>
+                <input asp-for="PopisCviku" id="popisek"class="form-control" />
+                <span asp-validation-for="PopisCviku" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <input type="hidden" name="datum" id="datumInput" value="@ViewBag.datum">
+                <input type="submit" value="Vytvořit" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<form asp-controller="TP" asp-action="Index">
+    <button type="submit" class="btn btn-dark mb-3">Zpět na TP</button>
+</form>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        const datumValue = document.getElementById("datumInput").value;
+         console.log(datumValue);
+
+
+        document.getElementById("pocetSerií").addEventListener("change", function () {
+            var serie = this.value;
+            var pauzaDiv = document.getElementById("pauza1");
+            var pauzaText = document.getElementById("pauzaText");
+            if (parseInt(serie) === 1) {
+                pauzaDiv.style.display = "none";
+                pauzaText.style.display = "none";
+                pauzaDiv.value = 0;
+            } else {
+                pauzaDiv.style.display = "block";
+                pauzaText.style.display = "block";
+            }
+        });
+
+
+        function validovatFormular() {
+            var vsechnyCviky = @Html.Raw(Json.Serialize(ViewBag.vsechnyCviky));
+            var pocetSerií = parseInt(document.getElementById("pocetSerií").value);
+            var nazevcviku = document.getElementById("nazevcviku").value;
+            var partiecviku = document.getElementById("partiecviku").value;
+            var opakování = document.getElementById("opakování").value;
+            var popisek = document.getElementById("popisek").value;
+            var pauza = parseInt(document.getElementById("pauza1").value);
+
+            if (vsechnyCviky.some(cvik => cvik.nazev === nazevcviku)) {
+                alert("Tento cvik už je vytvořen");
+                return false;
+            }
+
+            if (pocetSerií < 1 || pocetSerií > 15) {
+                alert("Zadejte platný počet sérií");
+                return false;
+            }
+
+            if (nazevcviku.length < 1 || nazevcviku.length > 200) {
+                alert("Zadejte platný název cviku");
+                return false;
+            }
+
+            if (partiecviku.length < 1 || partiecviku.length > 100) {
+                alert("Zadejte platný název partie cviku");
+                return false;
+            }
+
+            if (pauza < 0 || pauza > 300) {
+                alert("Zadejte platnou pauzu kratší než 5 minut");
+                return false;
+            }
+
+            if (popisek.length < 1 || popisek.length > 5000) {
+                alert("Zadejte platný popisek s který má maximálně 5000 znaků.");
+                return false;
+            }
+
+            var opakováníArray = opakování.split(',').map(function (item) {
+                var parsedValue = parseInt(item.trim());
+                if (!isNaN(parsedValue)) {
+                    return parsedValue;
+                }
+            }).filter(function (item) {
+                return typeof item === 'number' && item > 0 && item < 50;
+            });
+
+            if (opakováníArray.length !== pocetSerií) {
+                alert("Zadejte platný počet opakování ve správném formátu");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+}

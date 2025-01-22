@@ -1,0 +1,30 @@
+﻿@model FitnessWebApp.Models.Cvik
+
+@{
+    ViewData["Title"] = "Volba vah";
+}
+
+<h1 class="text-center">Volba vah</h1>
+
+<hr />
+
+<div class="container">
+    <h4>Volba vah v tréninku</h4>
+    <p>Volba vhodné váhy při tréninku je klíčová pro dosažení optimálního výsledku. Zvažte váhu tak, aby každá série cviku byla náročná, ale stále proveditelná s řádnou technikou. Pokud se při posledních opakováních série cítíte, že máte značnou rezervu, zvyšte váhu. Na druhou stranu, pokud se nedokážete udržet správnou formu po celou sérii, zvolenou váhu snižte.</p>
+    <hr />
+    <h4>Pokyny pro silové komplexní cviky</h4>
+    <p>Silové komplexní cviky, jako jsou dřepy, mrtvý tah a benchpress, jsou klíčové pro zlepšení síly. Při těchto cvicích je důležité řešit správnou váhu a provádět je s odpovídající intenzitou. Tyto cviky mají delší pauzy a menší počet opakování (1-5) (může se lišit podle zvoleného tréninkového plánu). Nejprve je třeba zjistit svůj maximální výkon na 1 opakování a postupně přidávat váhu podle toho, jak se zlepšujete.(pokud je v TP větší počet opakování pro tyto cviky pak je potřeba je cvičit jako všechny ostatní) (u těchto cviků není jasné kolik se bude cvičit sérií, nějaký počet tam je předepsaný, ale u těchto silových cviků s málým počtem opakování cvičit podle sebe a poté zapsat počet sérií do zpětné vazby)</p>
+    <hr />
+    <h4>Pokyny pro zbytek cviků</h4>
+    <p>U ostatních cviků s kratšími pauzami a vyšším počtem opakování (6 a více) je důležité zvolit váhu tak, aby vám poslední opakování série téměř selhala. Vždy si dejte pozor na správnou techniku a procítění svalu. Postupně přidávejte intenzifikační techniky pro větší výkon a svalový růst.</p>
+    <hr />
+    <h4>Různé potřeby cvičenců</h4>
+    <p>Pokud jste začátečník, nebojte se začít s lehčí váhou a postupně se zvyšovat. Dbejte na správnou techniku a postoj. Pokud jste zkušený cvičenec, zvolte váhu tak, aby vám téměř selhala v poslední sérii.</p>
+    <hr />
+    <h4>Poznámka k cvičení</h4>
+    <p>Dbejte vždy na správné držení těla a cvičení s správnou technikou. Stůjte pevně na zemi a dbajte na stabilitu těla.</p>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

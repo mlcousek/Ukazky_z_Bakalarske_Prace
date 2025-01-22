@@ -1,0 +1,58 @@
+﻿@model NahledPlanuModel
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+<div id="vsechno">
+
+    <h2 class="display-4">Tréninkový plán</h2>
+
+
+    <h3>Všechny tréninky:</h3>
+
+    <div class="table-responsive mb-3">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Typ tréninku</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var trenink in Model.Treninky)
+                {
+                    <tr>
+                        <td>@trenink.DatumTreninku.ToString("dd. MM. yyyy") @trenink.DatumTreninku.ToString("dddd", new System.Globalization.CultureInfo("cs-CZ"))</td>
+                        <td>@trenink.TypTreninku</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <p>Náhled byl vygenerován pomocí aplikace pro tvorbu tréninkových plánů. &copy; @DateTime.Now.Year - Jiří Mlčoušek</p>
+</div>
+
+<script>
+    var element = document.getElementById('vsechno');
+
+    var opt = {
+        margin: 0.965,
+        filename: 'dny_tréninků.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+
+
+    setTimeout(function () {
+        window.location.href = "/TP/Index";
+    }, 2000);
+</script>
+
+
+

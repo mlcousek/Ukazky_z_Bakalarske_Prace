@@ -1,0 +1,194 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Uzivatel> SignInManager
+@inject UserManager<Uzivatel> UserManager
+@model FitnessWebApp.Models.TP
+
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+@{
+    var currentUser = await UserManager.GetUserAsync(User);
+    var uroven = currentUser?.Uroven;
+}
+
+<h1 class="text-center">Vytvořit tréninkový plán</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+           <h2>Tréninkový plán s vygenerovanými tréninky</h2>
+            @if (uroven == 1)
+            {
+                
+                <div class="form-group mb-4">
+                    <label asp-for="Délka" class="control-label">Délka plánu</label>
+                    <select asp-for="Délka" class="form-control">
+                        <option value="1">1 měsíc</option>
+                        <option value="3">3 měsíce</option>
+                    </select>
+                    <span asp-validation-for="Délka" class="text-danger"></span>
+                </div>
+            } else
+            {
+                <div class="form-group mb-4">
+                    <label asp-for="Délka" class="control-label">Délka plánu</label>
+                    <select asp-for="Délka" class="form-control">
+                        <option value="1">1 měsíc</option>
+                        <option value="3">3 měsíce</option>
+                        <option value="6">6 měsíců</option>
+                    </select>
+                    <span asp-validation-for="Délka" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group mb-4">
+                <label asp-for="DruhTP" class="control-label">Cíl plánu</label>
+                <select asp-for="DruhTP" class="form-control" >
+                    <option value="RV">Redukce váhy</option>
+                    <option value="BSH">Budování svalové hmoty</option>
+                    <option value="SR">Silový rozvoj</option>
+                </select>
+                <span asp-validation-for="DruhTP" class="text-danger"></span>
+            </div>
+            @if (uroven == 1)
+            {
+                <div class="form-group mb-4 d-none">
+                    <label asp-for="StylTP" class="control-label"></label>
+                    <select asp-for="StylTP" class="form-control" asp-items="ViewBag.UzivatelID">
+                        <option value="KR">Kruhový trénink</option>
+                    </select>
+                </div>
+            } else
+            {
+                
+                <div class="form-group mb-4">
+                    <label asp-for="StylTP" class="control-label">Styl plánu</label>
+                    <select asp-for="StylTP" class="form-control">
+                        <option value="VM">Velká + malá partie</option>
+                        <option value="PPL">Push Pull Legs</option>
+                        <option value="KR">Kruhový trénink</option>
+                    </select>
+                    <span asp-validation-for="StylTP" class="text-danger"></span>
+                </div>
+            }
+            <div class="form-group mb-4">
+                <label asp-for="PocetTreninkuZaTyden" class="control-label">Počet tréninků za týden</label>
+                <select asp-for="PocetTreninkuZaTyden" class="form-control" id="PocetTreninkuZaTyden">
+                    <option value="3">3 tréninky</option>
+                    <option value="4">4 tréninky</option>
+                    <option value="5">5 tréninků</option>
+                    <option value="6">6 tréninků</option>
+                </select>
+                <span asp-validation-for="PocetTreninkuZaTyden" class="text-danger"></span>
+            </div>
+           
+            @for (int i = 0; i < 7; i++)
+            {
+                DayOfWeek dayOfWeek = (DayOfWeek)((i + 1) % 7);
+                <div class="form-check">
+                    <input type="checkbox" asp-for="@Model.DnyVTydnu[i].DenTréninku" class="form-check-input" id="@($"flexCheck{i}")">
+                    <label class="form-check-label" for="@($"flexCheck{i}")">@PomocnikSDaty.ZjistitJmeno(dayOfWeek)</label>
+                </div>
+            }
+            
+            <div class="form-group mb-4 d-none">
+                <label asp-for="UzivatelID" class="control-label"></label>
+                <select asp-for="UzivatelID" class ="form-control" asp-items="ViewBag.UzivatelID"></select>
+            </div>
+            
+            <div class="form-group mt-3 mb-4">
+                <input id="tlacitko-vytvorit" type="submit" value="Vytvořit" class="btn btn-dark" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+        <h2>Vlastní tréninkový plán</h2>
+        <form asp-action="VytvoritVlastniPlan">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mb-4 d-none">
+                <label asp-for="UzivatelID" class="control-label"></label>
+                <select asp-for="UzivatelID" class="form-control" asp-items="ViewBag.UzivatelID"></select>
+            </div>
+            <p>
+                Slouží k vytvoření vlastního tréninkového plánu a vlastních tréninků. Primárně se tato možnost využívá k zaznamenávání a plánování si vlastních tréninků.
+            </p>
+            <button class="btn btn-dark float-right-custom" type="submit" @* onclick="vytvoritVlastniPlan()"  *@style="margin: 20px;">Vytvořit vlastní</button>
+        </form>
+    </div>
+</div>
+
+<div>
+    <button class="btn btn-dark mb-3" onclick="zpetNaVytvorit()">
+        Zpět
+    </button>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        // function vytvoritVlastniPlan() {
+        //     window.location.href = "/TP/VytvoritVlastniPlan";
+        // }
+
+        function zpetNaVytvorit(){
+            window.location.href = "/TP/Index";
+        }
+
+        function automatickyZaskrtnoutPrvniCheckboxy(pocet) {
+            var checkboxy = document.querySelectorAll('input[type="checkbox"]');
+
+            for (var i = 0; i < pocet; i++) {
+                checkboxy[i].checked = true;
+            }
+        }
+
+        function automatickyZaskrtnoutCheckboxy() {
+            var pocetTreninku = parseInt(document.getElementById("PocetTreninkuZaTyden").value);
+            var checkboxy = document.querySelectorAll('input[type="checkbox"]');
+            var pocetZaskrtnutych = 0;
+            checkboxy.forEach(function (checkbox) {
+                if (checkbox.checked) {
+                    pocetZaskrtnutych++;
+                }
+            });
+
+            for (var i = 0; i < checkboxy.length; i++) {
+                if (pocetZaskrtnutych >= pocetTreninku) {
+                    checkboxy[i].disabled = !checkboxy[i].checked;
+                } else {
+                    checkboxy[i].disabled = false;
+                }
+            }
+            var tlacitkoVytvorit = document.getElementById("tlacitko-vytvorit");
+            if (pocetZaskrtnutych !== pocetTreninku) {
+                tlacitkoVytvorit.style.display = "none";
+            } else {
+                tlacitkoVytvorit.style.display = "block";
+            }
+        }
+        document.getElementById("PocetTreninkuZaTyden").addEventListener("change", function () {
+            automatickyZaskrtnoutCheckboxy();
+        });
+
+        var checkboxy = document.querySelectorAll('input[type="checkbox"]');
+        checkboxy.forEach(function (checkbox) {
+            checkbox.addEventListener("change", function () {
+                automatickyZaskrtnoutCheckboxy();
+            });
+        });
+
+        window.onload = function () {
+            var pocetTreninkuZaTyden = parseInt(document.getElementById("PocetTreninkuZaTyden").value);
+            automatickyZaskrtnoutPrvniCheckboxy(pocetTreninkuZaTyden);
+            automatickyZaskrtnoutCheckboxy();
+        };
+    </script>
+
+}

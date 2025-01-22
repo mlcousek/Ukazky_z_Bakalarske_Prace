@@ -1,0 +1,91 @@
+﻿@model FitnessWebApp.Models.Cvik
+
+@{
+    ViewData["Title"] = "Vytvořit cvik";
+}
+
+<h1>Vytvořit cvik</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" onsubmit="return validovatFormular()">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group mb-3">
+                <label asp-for="Nazev" class="control-label">Název</label>
+                <input asp-for="Nazev" id="nazevcviku" class="form-control" />
+                <span asp-validation-for="Nazev" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Partie" class="control-label"></label>
+                <input asp-for="Partie" id="partiecviku" class="form-control" />
+                <span asp-validation-for="Partie" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3" style="display: none;">
+                <label asp-for="PočtySérií" class="control-label"></label>
+                <input asp-for="PočtySérií" class="form-control" />
+                <span asp-validation-for="PočtySérií" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3" style="display: none;">
+                <label asp-for="PočtyOpakování" class="control-label"></label>
+                <input asp-for="PočtyOpakování" class="form-control" />
+                <span asp-validation-for="PočtyOpakování" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3" style="display: none;">
+                <label asp-for="PauzyMeziSériemi" class="control-label"></label>
+                <input asp-for="PauzyMeziSériemi" class="form-control" />
+                <span asp-validation-for="PauzyMeziSériemi" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="PopisCviku" class="control-label">Popis cviku</label>
+                <input asp-for="PopisCviku" id="popisek" class="form-control" />
+                <span asp-validation-for="PopisCviku" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Vytvořit" class="btn btn-success mb-3" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<form asp-controller="Cvik" asp-action="Index">
+    <button type="submit" class="btn btn-dark mb-3">Zpět</button>
+</form>
+
+@section Scripts {
+
+
+    <script>
+        function validovatFormular() {
+            var vsechnyCviky = @Html.Raw(Json.Serialize(ViewBag.vsechnyCviky));
+            var nazevcviku = document.getElementById("nazevcviku").value;
+            var partiecviku = document.getElementById("partiecviku").value;
+            var popisek = document.getElementById("popisek").value;
+
+            if (vsechnyCviky.some(cvik => cvik.nazev === nazevcviku)) {
+                alert("Tento cvik už je vytvořen");
+                return false;
+            }
+
+            if (nazevcviku.length < 1 || nazevcviku.length > 200) {
+                alert("Zadejte platný název cviku");
+                return false;
+            }
+
+            if (partiecviku.length < 1 || partiecviku.length > 100) {
+                alert("Zadejte platný název partie cviku");
+                return false;
+            }
+
+            if (popisek.length < 1 || popisek.length > 5000) {
+                alert("Zadejte platný popisek s který má maximálně 5000 znaků.");
+                return false;
+            }
+
+
+            return true;
+        }
+    </script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

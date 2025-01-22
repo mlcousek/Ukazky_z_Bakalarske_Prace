@@ -1,0 +1,29 @@
+﻿@model FitnessWebApp.Models.Cvik
+
+@{
+    ViewData["Title"] = "Playlisty";
+}
+
+<h1 class="text-center">Zde jsou odkazy na předdělané playlisty na Spotify</h1>
+
+<hr />
+
+<div class="container">
+    <h4>Rádiovky</h4>
+    <p><a href="https://open.spotify.com/playlist/1I5ti83R2wyTzKRhj3chOO?si=a472047bcf8b4592">Odkaz na playlist</a></p>
+    <hr />
+    <h4>Rap</h4>
+    <p><a href="https://open.spotify.com/playlist/4e1nbbpxbMz18kDO4RU74u?si=f5f7371a922e4b89">Odkaz na playlist</a></p>
+    <hr />
+    <h4>Rock</h4>
+    <p><a href="https://open.spotify.com/playlist/3BYdPptQ5Cnj2Kta1FSl1n?si=39cae71a2dfa4cfe">Odkaz na playlist</a></p>
+    <hr />
+    <h4>Motivační hudba</h4>
+    <p><a href="https://open.spotify.com/playlist/3pN5mJloTCf4W4sPYycvqf?si=ae0568730cb84988">Odkaz na playlist</a></p>
+    <hr />
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

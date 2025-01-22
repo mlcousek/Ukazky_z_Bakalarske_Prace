@@ -1,0 +1,89 @@
+﻿@model IEnumerable<FitnessWebApp.Models.Cvik>
+
+@{
+    ViewData["Title"] = "Nastavit Data";
+}
+
+@foreach (var item in Model)
+{
+    <h1>Nastavit Data pro cvik @Html.DisplayFor(modelItem => item.Nazev)</h1>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form method="post" action="/Cvik/UlozitPridaneData" onsubmit="return validovatFormular()">
+                <input type="hidden" name="cvikId" value="@item.CvikId" />
+                <input type="hidden" name="datum" id="datumInput" value="@ViewBag.datum" />
+                <label for="pocetSerií" class="form-label mt-4">Počet sérií (př. 3)</label>
+                <input type="text" class="form-control" id="pocetSerií" min="1" max="15" name="pocetSerií" placeholder="Počet sérií" required />
+
+                <label for="opakování" class="form-label mt-4">Opakování v sériích (př. 12, 10, 8)</label>
+                <input type="text" class="form-control" id="opakování" name="opakování" placeholder="Opakování v sériích" required />
+
+                <label for="pauza" id="pauzaText" class="form-label mt-4">Pauza mezi sériemi (s) (př. 60)</label>
+                <input type="text" class="form-control" id="pauza1" min="0" max="300" name="pauza" placeholder="Pauza mezi sériemi (s)" required />
+
+                <button type="submit" class="btn btn-outline-success mt-3 mb-3">Uložit</button>
+            </form>
+        </div>
+    </div>
+
+    <form method="get" action="/TP/Index">
+        <button class="btn btn-dark mb-3" type="submit">Zpět na plán</button>
+    </form>
+}
+@section Scripts {
+    <script>
+        const datumValue = document.getElementById("datumInput").value;
+        console.log(datumValue);
+
+        document.getElementById("pocetSerií").addEventListener("change", function () {
+            var serie = this.value;
+            var pauzaDiv = document.getElementById("pauza1");
+            var pauzaText = document.getElementById("pauzaText");
+            if (parseInt(serie) === 1) {
+                pauzaDiv.style.display = "none";
+                pauzaText.style.display = "none";
+                pauzaDiv.value = 0;
+            } else {
+                pauzaDiv.style.display = "block";
+                pauzaText.style.display = "block";
+            }
+        });
+
+        function validovatFormular() {
+            var pocetSerií = parseInt(document.getElementById("pocetSerií").value);
+            var opakování = document.getElementById("opakování").value;
+            var pauza = parseInt(document.getElementById("pauza1").value);
+
+            if (pocetSerií < 1 || pocetSerií > 15) {
+                alert("Zadejte platný počet sérií");
+                return false;
+            }
+
+            if (pauza < 0 || pauza > 300) {
+                alert("Zadejte platnou pauzu kratší než 5 minut");
+                return false;
+            }
+
+            var opakováníArray = opakování.split(',').map(function (item) {
+                var parsedValue = parseInt(item.trim());
+                if (!isNaN(parsedValue)) {
+                    return parsedValue;
+                }
+            }).filter(function (item) {
+                return typeof item === 'number' && item > 0 && item < 50;
+            });
+
+            if (opakováníArray.length !== pocetSerií) {
+                alert("Zadejte platný počet opakování ve správném formátu");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

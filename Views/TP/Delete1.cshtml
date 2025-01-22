@@ -1,0 +1,27 @@
+﻿@model FitnessWebApp.Models.TP
+
+@{
+    ViewData["Title"] = "Smazat TP";
+}
+
+<h1>Smazat TP</h1>
+
+<h3>Opravdu chcete smazat tréninkový plán?</h3>
+<div>
+    <hr />
+    <div class="button-container-cus1">
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <input type="submit" value="Smazat" class="btn btn-danger custom-mr" />
+        </form>
+        <button class="btn btn-secondary" onclick="zpetNaTP()">Zpět</button>
+    </div>
+
+</div>
+
+<script>
+    function zpetNaTP() {
+        window.location.href = "/TP/Index";
+    }
+</script>

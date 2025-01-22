@@ -1,0 +1,335 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Uzivatel> SignInManager
+@inject UserManager<Uzivatel> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FitnessWebApp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.0/fullcalendar.print.min.css" media="print" />
+    <link rel="stylesheet" href="~/css/MojeCSSSablona.css"/>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/FitnessWebApp.styles.css" asp-append-version="true" />
+    <link rel="icon" type="image/png" href="~/Images/logo-cerne.png">
+    
+</head>
+
+@{
+    string controllerName = ViewContext.RouteData.Values["controller"]?.ToString();
+    string actionName = ViewContext.RouteData.Values["action"]?.ToString();
+}
+
+<body>
+@if (!string.IsNullOrEmpty(controllerName) && !string.IsNullOrEmpty(actionName))
+    {
+        if (controllerName == "TP" && actionName == "NahledPlanu")
+        {
+            
+        }
+        else if (controllerName == "TP" && actionName == "NahledPlanuDny")
+        {
+            
+        }
+        else if (controllerName == "TP" && actionName == "NahledPlanuTreninky")
+        {
+
+        }
+        else if (controllerName == "Home" && actionName == "Index")
+        {
+            <header>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <nav class="navbar navbar-cus1 navbar-expand-lg bg-dark" data-bs-theme="dark">
+                        <div class="container-fluid">
+                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                                <img src="~/Images/logo-bile.png" alt="Logo" width="50" height="50" id="logo-v-nav" class="d-inline-block align-text-top">
+                            </a>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarColor02">
+                                <ul class="navbar-nav me-auto">
+                                    <li class="nav-item">
+                                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">
+                                            Domů
+                                            <span class="visually-hidden">(current)</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "TP" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")" asp-area="" asp-controller="TP" asp-action="Index">Tréninkový plán</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "TreninkoveData" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")" asp-area="" asp-controller="TreninkoveData" asp-action="Index">Přehled dat</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "TreninkoveData" && ViewContext.RouteData.Values["Action"].ToString() == "Maximalky" ? "active" : "")" asp-area="" asp-controller="TreninkoveData" asp-action="Maximalky">Maximálky</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Cvik" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")" asp-area="" asp-controller="Cvik" asp-action="Index">Databáze cviků</a>
+                                    </li>
+                                    @* <li class="nav-item">
+                                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Cvik" && ViewContext.RouteData.Values["Action"].ToString() == "VolbaVah" ? "active" : "")" asp-area="" asp-controller="Cvik" asp-action="VolbaVah">Volba vah</a>
+                                    </li> *@
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="" asp-action="">Další</a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" asp-area="" asp-controller="Cvik" asp-action="VolbaVah">Volba vah</a>
+                                            <a class="dropdown-item" asp-area="" asp-controller="Cvik" asp-action="Playlisty">Playlisty</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <partial name="_LoginPartial" />
+                            </div>
+                        </div>
+                    </nav>
+                }
+                else
+                {
+                    <nav class="navbar navbar-cus navbar-expand-lg bg-dark" data-bs-theme="dark">
+                        <div class="container-fluid">
+                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                                <img src="~/Images/logo-bile.png" alt="Logo" width="50" height="50" id="logo-v-nav" class="d-inline-block align-text-top">
+                            </a>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarColor02">
+                                <ul class="navbar-nav me-auto">
+                                    <li class="nav-item">
+                                      
+                                    </li>
+
+                                    <li class="nav-item">
+                                    </li>
+                                </ul>
+                                <partial name="_LoginPartial" />
+                            </div>
+                        </div>
+                    </nav>
+                }
+            </header>
+        }
+        else
+        {
+            <header>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+                        <div class="container-fluid">
+                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                                <img src="~/Images/logo-bile.png" alt="Logo" width="50" height="50" id ="logo-v-nav" class="d-inline-block align-text-top">
+                            </a>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarColor02">
+                                <ul class="navbar-nav me-auto">
+                                    <li class="nav-item">
+                                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Home" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">
+                                            Domů
+                                            <span class="visually-hidden">(current)</span>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "TP" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")" asp-area="" asp-controller="TP" asp-action="Index">Tréninkový plán</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "TreninkoveData" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")" asp-area="" asp-controller="TreninkoveData" asp-action="Index">Přehled dat</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "TreninkoveData" && ViewContext.RouteData.Values["Action"].ToString() == "Maximalky" ? "active" : "")" asp-area="" asp-controller="TreninkoveData" asp-action="Maximalky">Maximálky</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Cvik" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")" asp-area="" asp-controller="Cvik" asp-action="Index">Databáze cviků</a>
+                                    </li>
+                                    @* <li class="nav-item">
+                                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"].ToString() == "Cvik" && ViewContext.RouteData.Values["Action"].ToString() == "VolbaVah" ? "active" : "")" asp-area="" asp-controller="Cvik" asp-action="VolbaVah">Volba vah</a>
+                                    </li> *@
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="" asp-action="">Další</a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" asp-area="" asp-controller="Cvik" asp-action="VolbaVah">Volba vah</a>
+                                            <a class="dropdown-item" asp-area="" asp-controller="Cvik" asp-action="Playlisty">Playlisty</a>
+                                        </div>
+                                    </li> 
+                                </ul>
+                                <partial name="_LoginPartial" />
+                            </div>
+                        </div>
+                    </nav>
+                }
+                else
+                {
+                    <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+                        <div class="container-fluid">
+                            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                                <img src="~/Images/logo-bile.png" alt="Logo" width="50" height="50" id="logo-v-nav" class="d-inline-block align-text-top">
+                            </a>
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarColor02">
+                                <ul class="navbar-nav me-auto">
+                                    <li class="nav-item">
+                                        
+                                    </li>
+
+                                    <li class="nav-item">
+                                    </li>
+                                </ul>
+                                <partial name="_LoginPartial" />
+                            </div>
+                        </div>
+                    </nav>
+                }
+            </header>
+        }
+} else
+{
+    <header>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="~/Images/logo-bile.png" alt="Logo" width="50" height="50" id="logo-v-nav" class="d-inline-block align-text-top">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarColor02">
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                    Domů
+                                    <span class="visually-hidden">(current)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="TP" asp-action="Index">Tréninkový plán</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="TreninkoveData" asp-action="Index">Přehled dat</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="TreninkoveData" asp-action="Maximalky">Maximálky</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Cvik" asp-action="Index">Databáze cviků</a>
+                            </li>
+                            @* <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Cvik" asp-action="VolbaVah">Volba vah</a>
+                            </li> *@
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" asp-area="" asp-controller="" asp-action="">Další</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-area="" asp-controller="Cvik" asp-action="VolbaVah">Volba vah</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Cvik" asp-action="Playlisty">Playlisty</a>
+                                </div>
+                            </li>
+                        </ul>
+                        <partial name="_LoginPartial" />
+                    </div>
+                </div>
+            </nav>
+        }
+        else
+        {
+            <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="~/Images/logo-bile.png" alt="Logo" width="50" height="50" id="logo-v-nav" class="d-inline-block align-text-top">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarColor02">
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                               
+                            </li>
+
+                            <li class="nav-item">
+                            </li>
+                        </ul>
+                        <partial name="_LoginPartial" />
+                    </div>
+                </div>
+            </nav>
+        }
+    </header>
+}
+    @if (!string.IsNullOrEmpty(controllerName) && !string.IsNullOrEmpty(actionName))
+    {
+        if (controllerName == "Home" && actionName == "Index" && SignInManager.IsSignedIn(User))
+        {
+            // Pro controller Home a akci Index
+            <div class="container-fluid p-0 ">
+                <main role="main">
+                    @RenderBody()
+                </main>
+            </div>
+            <footer class="border-top footer footer-cus text-muted bg-dark">
+                <div class="background-footer1">
+                    <div class="container">
+                        <span class="text-white">&copy; @DateTime.Now.Year - Jiří Mlčoušek - <a class="odkaz-white" asp-area="" asp-controller="Home" asp-action="Privacy">Zásady ochrany osobních údajů</a></span>
+                    </div>
+                </div>
+            </footer>
+        }
+        else if (controllerName == "Home" && actionName == "Index" && !SignInManager.IsSignedIn(User))
+        {
+            // Pro controller Home a akci Index
+            <div class="container-fluid p-0 ">
+                <main role="main">
+                    @RenderBody()
+                </main>
+            </div>
+            <footer class="border-top footer footer-cus text-muted bg-dark">
+                <div class="background-footer">
+                    <div class="container">
+                        <span class="text-white">&copy; @DateTime.Now.Year - Jiří Mlčoušek - <a class="odkaz-white" asp-area="" asp-controller="Home" asp-action="Privacy">Zásady ochrany osobních údajů</a></span>
+                    </div>
+                </div>
+            </footer>
+        }
+        else
+        {
+            // Pro ostatní případy
+            <div class="container mt-4 mb-4">
+                <main role="main">
+                    @RenderBody()
+                </main>
+            </div>
+            <footer class="border-top footer text-muted">
+                <div class="container">
+                    &copy; @DateTime.Now.Year - Jiří Mlčoušek - <a class="odkaz-black" asp-area="" asp-controller="Home" asp-action="Privacy">Zásady ochrany osobních údajů</a>
+                </div>
+            </footer>
+        }
+    }
+    else
+    {
+    // Pokud názvy nejsou dostupné, zobrazit obsah pro případ, kdy nejsou dostupné informace o controlleru a akci
+        <div class="container mt-4 mb-4">
+            <main role="main">
+                @RenderBody()
+            </main>
+        </div>
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; @DateTime.Now.Year - Jiří Mlčoušek - <a class="odkaz-black" asp-area="" asp-controller="Home" asp-action="Privacy">Zásady ochrany osobních údajů</a>
+            </div>
+        </footer>
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
