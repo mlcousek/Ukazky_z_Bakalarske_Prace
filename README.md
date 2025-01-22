@@ -30,6 +30,12 @@ Tento projekt je součástí mé bakalářské práce na téma **"Aplikace pro v
 
 ## Jak spustit projekt
 
+Aplikaci si můžete vyzkoušet na následující adrese: [Aplikace](http://tpwebapp1-001-site1.mtempurl.com/)
+- username: 11214711
+- heslo: 60-dayfreetrial
+
+V aplikace je vytvořen testovací uživatel s emailem: test@test.cz a s heslem: Test123
+V případě vytváření vlastního účtu pokračujte dle návodu v textu bakalářské práce. 
 
 ---
 
@@ -45,19 +51,16 @@ Tento projekt je součástí mé bakalářské práce na téma **"Aplikace pro v
 - Uložte plán a začněte trénovat.
 
 ### 3. Sledování pokroku
-- V sekci **"Statistiky"** si zobrazte grafy a přehled výsledků.
+- V sekci **"Přehled dat"** a **Maxilálky** si zobrazte grafy a přehled výsledků.
 - Exportujte svůj plán nebo data do PDF pro offline použití.
 
 ---
 
-## Struktura projektu
+## Hlavní struktura projektu
 
 - `Controllers/`: Zpracování logiky aplikace.
 - `Models/`: Datové modely pro interakci s databází.
 - `Views/`: Uživatelské rozhraní.
-- `wwwroot/`: Statické soubory jako obrázky a styly.
-- `Dockerfile`: Konfigurace pro Docker.
-- `docker-compose.yml`: Nastavení více kontejnerů pro vývoj a nasazení.
 
 ---
 
